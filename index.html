@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="baidu-site-verification" content="V6X3JvD5Vq" />
     <title>kings.chan</title>
     <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
     <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <style>
@@ -21,7 +24,7 @@
             background-color: #996699;
             background-image: url('./www/img/bg.svg');
             box-shadow: 0px 0px 4px #868282;
-            font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
+            font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial,Microsoft Yahei serif;
         }
         .page-head-title{
             margin-top: 0;
@@ -39,15 +42,22 @@
             margin-left: auto;
             box-shadow: 0px 0px 4px #868282;
         }
+        .skill-list{
+            font-size: 18px;
+            font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
+        }
+        .work-experience{
+        }
     </style>
 </head>
 <body>
+<script>NProgress.start();NProgress.inc();</script>
 <div class="page-head">
     <div class="center-block">
         <img class="img-circle page-head-profile-img" src="./www/img/me.jpg" alt="kingschan"  />
     </div>
     <h1 class="text-center page-head-title">Kings.chan's resume</h1>
-    <h3 class="text-center" style="color: white;">专注Java，喜欢编程，热爱开源技术，擅长做线上互联网项目！</h3>
+    <h3 class="text-center" style="color: white;">专注Java，喜欢编程，热爱开源技术，擅长线上互联网项目！</h3>
 </div>
 <div class="container">
     <h3 id="联系方式">联系方式</h3>
@@ -55,7 +65,6 @@
         <li>手机(mobile):176 2060 5126</li>
         <li>Email: <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=udLQ197Kl9rR2Nf5yMiX2tbU">kings.chan@qq.com</a></li>
         <li>QQ：10074517</li>
-        <li>博客：<a target="_blank" href="http://kingschan.51so.info">http://kingschan.51so.info</a></li>
     </ul>
 
     <h3 id="个人信息">个人信息</h3>
@@ -64,7 +73,8 @@
         <li>陈国祥 kings.chan/男</li>
         <li>本科/软件工程/</li>
         <li>工作年限：2012.02~至今（5年）</li>
-        <li>GitHub：<a target="_blank" href="https://github.com/kingschan1204" target="_blank" >https://github.com/kingschan1204</a></li>
+        <li>博客：<a target="_blank" href="http://kingschan.51so.info">http://kingschan.51so.info</a></li>
+        <li>github：<a target="_blank" href="https://github.com/kingschan1204" target="_blank" >https://github.com/kingschan1204</a></li>
         <li>期望职位：项目经理/高级工程师/平台研发工程师 <strong>非外包</strong></li>
     </ul>
 
@@ -73,7 +83,7 @@
 
     <h3>工作经历</h3>
     <hr>
-    <h4>2014年5月~至今 佛山市高进信息科技有限公司 项目经理</h4>
+    <h4 class="work-experience">2014年5月~至今 佛山市高进信息科技有限公司 项目经理</h4>
 
     <ul>
         <li>海天&amp;立白 企业应用定制开发</li>
@@ -83,50 +93,55 @@
         <li>后台开发，平台研发</li>
     </ul>
 
-    <h4>2013.7- 2014.5 广东科杰通信息科技有限公司 java工程师</h4>
+    <h4 class="work-experience">2013.7- 2014.5 广东科杰通信息科技有限公司 java工程师</h4>
 
     <ul>
         <li>政府项目定制开发</li>
         <li>保险公司交通事故管理系统开发</li>
     </ul>
 
-    <h4>2012.2 - 2013.5 佛山市金政信息科技有限公司 java工程师</h4>
+    <h4 class="work-experience">2012.2 - 2013.5 佛山市金政信息科技有限公司 java工程师</h4>
 
     <ul>
         <li>ERP定制开发</li>
     </ul>
 
-    <h4>2011.7-2012.2 华为终端实习生</h4>
+    <h4 class="work-experience">2011.7-2012.2 华为终端实习生</h4>
     <ul>
         <li>学习各种技能</li>
     </ul>
 
-    <h3 id="开源项目及作品">开源项目及作品</h3>
+    <h3>开源项目及作品</h3>
     <ul>
-        <li><a target="_blank" href="https://kingschan1204.github.io/jblog">jblog</a></li>
-        <li><a target="_blank" href="https://kingschan1204.github.io/jfastquery/">jfastQuery</a></li>
+        <li><a target="_blank" href="https://kingschan1204.github.io/jblog">jblog</a> : 多用户博客系统</li>
+        <li><a target="_blank" href="https://kingschan1204.github.io/jfastquery/">jfastQuery</a> : 一个快速查询组件</li>
         <li>… …</li>
     </ul>
 
     <h3>职业专长</h3>
 
-    <ul>
+    <ul class="skill-list">
         <li>main : <strong>java</strong> , C# , <strong>javascript</strong>  ,　shell , SQL , HTML5</li>
-        <li>前端(font) : html5 , jquery , <strong>bootstrap</strong> , miniui,easyui , <strong>angualar js</strong></li>
-        <li><strong>后台(back)：Spring ,SpringMVC ,Spring boot,Hibernate,Struts2 ,Hibernante-search</strong></li>
+        <li>font : html5 , jquery , <strong>bootstrap</strong> , miniui,easyui , <strong>angualar js</strong></li>
+        <li>back<strong>：Spring , SpringMVC , Spring boot , Hibernate , Struts2 , Hibernante-search </strong></li>
         <li>template engine: Freemarker</li>
-        <li>webservice : CXF , axis2</li>
-        <li><strong>Database : Mssql,Mysql,Oracle,Sqllite,H2,derby,memcache,redis,mongodb</strong></li>
-        <li>OS : <strong>Linux centos</strong> ,OSX ,Windows</li>
+        <li>webservice : CXF , axis2 </li>
+        <li><strong>Database : Mssql ,Mysql , Oracle , Sqllite , H2 , derby , memcache , redis , mongodb</strong></li>
+        <li>OS : <strong>Linux centos</strong> ,OSX </li>
         <li>mobile develop: andorid , wince</li>
-        <li>open-source : <strong>lucene</strong>,<strong>Solr</strong> ,<strong>jsoup</strong> ,crawler4j,markdown,druid,<strong>JSqlParser</strong>,nutch apache …</li>
-        <li>servlet容器: tomcat , jetty</li>
-        <li>web服务器: nginx</li>
+        <li>open-source : <strong> lucene </strong> , <strong> Solr </strong> ,<strong> jsoup </strong> , crawler4j , markdown , druid ,<strong> JSqlParser </strong> , nutch apache …</li>
+        <li>web server tomcat ,jetty , nginx</li>
         <li>sso : cas</li>
         <li>test : <strong>junit</strong> , jmeter , app scan ,loadrunner</li>
         <li>other: maven</li>
     </ul>
-</div><!--end container>
-
+    <div class="bdsharebuttonbox"><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_print" data-cmd="print" title="分享到打印"></a><a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a></div>
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":[],"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+</div><!--end container-->
+<script>
+    setInterval(function(){
+        NProgress.done();
+    },1000)
+</script>
 </body>
 </html>
