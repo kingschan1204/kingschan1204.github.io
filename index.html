@@ -24,11 +24,11 @@ NProgress.inc();</script>
     </div>
     <h1 class="text-center page-head-title">Kings.chan's resume</h1>
 
-    <h3 class="text-center" style="color: white;">本人属于全栈工程师，专注Java，喜欢编程，热爱开源技术，擅长线上互联网项目！</h3>
+    <h3 class="text-center" style="color: white;">本人属于全栈工程师，专注Java，热爱开源技术，擅长线上互联网项目！</h3>
 </div>
 <div class="container">
     <h3 id="个人信息">个人信息</h3>
-    <ul style="list-style: none;">
+    <ul class="profile-ul">
         <li><i class="fa fa-user fa-fw"></i> 陈国祥 kings.chan/男</li>
         <li><i class="fa fa-graduation-cap fa-fw"></i> 本科/软件工程/</li>
         <li><i class="fa fa-users fa-fw"></i>2012.02~至今（5年）</li>
@@ -39,7 +39,7 @@ NProgress.inc();</script>
     </ul>
 
     <h3 id="联系方式">联系方式</h3>
-    <ul style="list-style: none;">
+    <ul class="profile-ul">
         <li><i class="fa fa-phone fa-fw"></i> :176 2060 5126</li>
         <li> <i class="fa fa-envelope-o fa-fw"></i> : <a target="_blank"
                       href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=udLQ197Kl9rR2Nf5yMiX2tbU">kings.chan@qq.com</a>
@@ -121,7 +121,7 @@ NProgress.inc();</script>
     <!---->
 
     <h3>开源项目及作品</h3>
-    <ul style="list-style: none;">
+    <ul class="profile-ul">
         <li><a target="_blank" href="https://kingschan1204.github.io/jblog">jblog</a> : 多用户博客系统支持：泛型域名，七牛云存储，emoji表情包,markdown,全文检索,评论点赞,响应式布局...</li>
         <li><a target="_blank" href="https://kingschan1204.github.io/jfastquery/">jfastQuery</a> : 基于<a href="https://github.com/JSQLParser/JSqlParser" target="_blank">Jsqlparser</a>二次开发一个快速查询组件,支持复杂查询，SQL离线分析，动态构建SQL</li>
         <li><a target="_blank" href="http://git.oschina.net/kingschan/rbac">rbac</a> : 一个java实现的权限管理系统</li>
@@ -137,20 +137,34 @@ NProgress.inc();</script>
         <li><strong>常用</strong>： Hibernate , Struts2 ,Freemarker,druid,JSqlParser(sql 解析) ,cas(单点登录)，ehcache</li>
         <li><strong>webservice</strong> : CXF , axis2</li>
         <li><strong>RDBMS</strong> : SQL Server ,Mysql , Oracle , Sqllite , H2 , derby</li>
-        <li><strong>Nosql</strong>:memcache , redis , mongodb , Hbase</li>
+        <li><strong>Nosql</strong>:memcache , redis , mongodb , Hbase ,cassandra</li>
         <li><strong>OS</strong> : Linux centos ,OSX</li>
         <li><strong>移动原生开发</strong>: andorid , wince</li>
-        <li><strong>全文检索</strong>:lucene , Solr , Hibernante-search</li>
+        <li><strong>全文检索</strong>:lucene , Solr ,elasticsearch, Hibernante-search</li>
         <li><strong>网络爬虫</strong>:jsoup(html解析),crawler4j,nutch</li>
         <li><strong>web server</strong>: tomcat ,jetty , nginx</li>
         <li><strong>test</strong> : junit , jmeter , app scan ,loadrunner</li>
-        <li><strong>构建</strong>: maven,git,svn,ant</li>
-        <li><strong>开源技术</strong>:<a href="https://github.com/kingschan1204?tab=stars" target="_blank">跟踪列表</a></li>
+        <li><strong>构建/容器</strong>: maven,git,svn,ant ,Docker</li>
+        <li><strong>开源技术</strong>:<a href="https://github.com/kingschan1204?tab=stars" target="_blank">跟踪关注技术列表</a></li>
     </ul>
 
-    <h3>项目经验</h3>
+    <h3>工作项目经验</h3>
 
 
+    <h4>2015/6 -2016/2  产品条码管理系统</h4>
+    <blockquote>
+        <p>该系统主要是对接海天全自动立体仓库WMS系统，实现功能：自动分配搬运组，叉车组，平库区管理，立库补货，扫描装车，等功能,由于公司没有人会开发wince扫描枪程序，因此我自学wince开发在此项目中担任wince移动端开发工程师。</p>
+        <ul>
+            <li>项目架构(后台服务):Spring MVC+Apache CXF+ Hibernate + JCO</li>
+            <li>Wince APP:用C#开发wince程序，对接<code>symbol MC3200</code>硬件API (wince7系统)使用webservice与java后台交互,扫描枪本地缓存使用<code>sqlLite</code>嵌入式数据库</li>
+            <li>担任团队扫描枪开发工程师负责扫描枪APP的开发</li>
+            <li><strong>扫描枪功能如下：</strong></li>
+            <li>二维码识别,一维码识别,工业生产数据采集</li>
+            <li>条码库存盘点，入库，出库，移库，立库补货</li>
+            <li>装车扫描（托盘条码，外箱条码）防装错货</li>
+            <li>wince 进程管理,wince时间同步</li>
+        </ul>
+    </blockquote>
 
 
     <h4> 2014/11-2015/6 海天文档管理系统</h4>
