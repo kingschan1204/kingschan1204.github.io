@@ -29,7 +29,7 @@ hr {
     border-color: #CCCCCC;
 }
 
-h2, h3,strong {
+h2, h3,h4,strong {
     color: #996699;
 }
 
@@ -69,4 +69,12 @@ h2, h3,strong {
 .navy-bg {
     background-color: #23c6c8;
     color: #fff;
+}
+blockquote {
+    background: #ddd;
+    border-left: 5px solid #ccc;
+    padding: 15px 20px;
+    margin-top: 10px;
+    border-left: 5px solid #657b83;
+    background: #f6f6f6;
 }
