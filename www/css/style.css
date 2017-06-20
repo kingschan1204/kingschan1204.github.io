@@ -37,7 +37,7 @@ h2, h3,strong {
     margin: 0px;
     padding: 10px;
     background-color: #996699;
-    background-image: url('./www/img/bg.svg');
+    background-image: url('../img/bg.svg');
     box-shadow: 0px 0px 4px #868282;
     font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, Microsoft Yahei serif;
 }
