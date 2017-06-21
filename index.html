@@ -133,7 +133,7 @@ NProgress.inc();</script>
 
     <ul class="skill-list">
         <li><strong>主要</strong> : java , C# , javascript</li>
-        <li><strong>前端</strong> : html5 , jquery , <code>bootstrap</code> , miniui,easyui , angualar js</li>
+        <li><strong>前端</strong> : html5 , jquery , <code>bootstrap</code> , miniui,easyui , angualar js ,Echar</li>
         <li><strong>Spring</strong>:spring ,spring mvc ,<code>Spring boot</code> ,<code>spring data jpa</code> ,spring data redis</li>
         <li><strong>常用</strong>： Hibernate , Struts2 ,Freemarker,druid,JSqlParser(sql 解析) ,<code>cas(单点登录)</code>，ehcache</li>
         <li><strong>webservice</strong> : CXF , axis2</li>
@@ -155,7 +155,21 @@ NProgress.inc();</script>
 
     <h4>2017/04 -至今 立白TMS(物流运输管理系统)</h4>
     <blockquote>
-        <p>项目开发中，资料整理中。。。</p>
+        <p>liby-Tms是从SAP SD模块中同步立白全国所有交货单到TMS，在TMS中按一定的数据规则将交货单分配到指定的物流商，物流商基于交货单在TMS中做拼拆单处理，（一个拼车单视为一个运输单位）然后物流商对拼车单进行预约登记车辆信息，拼车单所对应的仓库
+        按照车辆预约信息提前做备货（将交货单货物从仓库WMS下架备好到暂存区），在备货的时候按照区域自动派单规则自动分配叉车进行作业。当车辆到达厂区后拿派车单在门卫室进行扫码签到，然后TMS会将签到的车辆加入列队，到系统分配到站台及搬运组后，刷新长门口的大
+            LED看板，系统并通过语音播报系统叫号通知搬运工,司机将车辆开至指定站台进行装车.在装车完成后当门卫室放行车辆后TMS通过GPS自动跟踪车辆位置记录行车轨迹，如线路有异常则通知管理人员进行异常排查。当货物送到客户后，客户和司机在微信公众号里进行签收，系统自动比对差异上传
+            客户签字完成送货。并将信息通过接口同步到网订系统。<code>系统第一期会先在马鞍山和新乡上线，后续全国铺开部署在各个库存地点或分公司</code>
+        </p>
+        <ul>
+            <li>技术架构<code>(分布式)</code>:Bootstrap + Echar + Freemarker + Spring mvc +spring + Spring data jpa +Spring data redis + ehcache+ redis +oracle +jco + quartz + hadoop+ dubobo +ActiveMQ + aliyun 云存储 + Flash (领导车辆作业实时看板) + 微信公众号服务功能开发</li>
+            <li>对接硬件：symbol MC3200(扫描枪)，LED全彩屏幕，语音播报系统，GPS定位，门卫签到扫描仪</li>
+            <li>担任团队项目经理，分析及调研需求，搭建架构，解决技术难点，安排开发人员开发，掌握项目进度。并参与核心模块开发。</li>
+            <li>
+                <img src="www/img/tms.png" width="200" height="300" class="img-rounded">
+                <img src="www/img/tms-app.png" width="300" height="300" class="img-rounded">
+                <img src="www/img/tms-login.png" width="400" height="300" class="img-rounded">
+            </li>
+        </ul>
     </blockquote>
 
     <h4>2016/10 -2017/03 包原材收发条码识别信息系统</h4>
