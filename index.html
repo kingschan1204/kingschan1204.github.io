@@ -34,8 +34,8 @@ NProgress.inc();</script>
         <li><i class="fa fa-user fa-fw"></i> 陈国祥 kings.chan/男</li>
         <li><i class="fa fa-graduation-cap fa-fw"></i> 本科/软件工程/</li>
         <li><i class="fa fa-users fa-fw"></i>2012.02~至今（5年）</li>
-        <li><i class="fa fa-feed fa-fw"></i><a target="_blank" href="http://kingschan.51so.info">http://kingschan.51so.info</a></li>
-        <li><i class="fa fa-github fa-fw"></i><a target="_blank" href="https://github.com/kingschan1204" target="_blank">https://github.com/kingschan1204</a>
+        <li><i class="fa fa-feed fa-fw"></i><a target="_blank" href="http://kingschan.51so.info" data-toggle="tooltip" title="自己开发的开源博客" data-placement="bottom">http://kingschan.51so.info</a></li>
+        <li><i class="fa fa-github fa-fw"></i><a target="_blank" href="https://github.com/kingschan1204" target="_blank" data-toggle="tooltip" title="我的Github主页" data-placement="bottom">https://github.com/kingschan1204</a>
         </li>
         <li><i class="fa fa-flag fa-fw"></i><strong>目前在职</strong></li>
         <li>期望职位：项目经理/高级工程师/平台研发工程师 <strong>非外包</strong></li>
@@ -44,7 +44,7 @@ NProgress.inc();</script>
     <h3 id="联系方式">联系方式</h3>
     <ul class="profile-ul">
         <li><i class="fa fa-phone fa-fw"></i> 176 2060 5126</li>
-        <li> <i class="fa fa-envelope-o fa-fw"></i>  <a target="_blank"
+        <li> <i class="fa fa-envelope-o fa-fw"></i>  <a target="_blank" title="点击链接给我发邮件" data-toggle="tooltip" data-placement="bottom"
                       href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=udLQ197Kl9rR2Nf5yMiX2tbU">kings.chan@qq.com</a>
         </li>
         <li><i class="fa fa-qq fa-fw"></i>10074517</li>
@@ -399,6 +399,7 @@ NProgress.inc();</script>
 </script>
 <script>
     $(function () {
+        $("[data-toggle='tooltip']").tooltip();
         $(".fancybox").fancybox({titlePosition:'outside',transitionIn:'elastic',transitionOut:'elastic'});
     });
 </script>
