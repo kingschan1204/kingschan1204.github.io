@@ -71,6 +71,8 @@ var _hmt = _hmt || [];
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="http://i.51so.info/resume/">Me</a></li>
+	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -80,7 +82,7 @@ var _hmt = _hmt || [];
     			
             
     			
-    			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
+    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
     			
             
 		</nav>
@@ -123,6 +125,8 @@ var _hmt = _hmt || [];
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -143,7 +147,9 @@ var _hmt = _hmt || [];
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 100%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
+		        
+					<li style="width: 50%"><a href="http://i.51so.info/resume/">Me</a></li>
 		        
 				</ul>
 			</nav>
@@ -444,7 +450,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
       
         
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
       
         
     </ul>
@@ -532,13 +538,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
 
     
-
-    
-    	<section class="tools-section tools-section-me" q-show="aboutme">
-  	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">java程序员一枚，卖码为生！&lt;br&gt;会一些前端，懂一些后端，做过几年管理，弄过一些运维，搞过一些互联网开源项目，没错，我是一个爱开源爱折腾的团队万能胶！</div>
-  	  	
+    	<section class="tools-section tools-section-friends" q-show="friends">
+  		
+        <ul class="search-ul">
+          
+            <li class="search-li">
+              <a href="https://www.jisilu.cn/data/stock/dividend_rate/#cn" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>集思录</a>
+            </li>
+          
+        </ul>
+  		
     	</section>
+    
+
     
   </div>
   
