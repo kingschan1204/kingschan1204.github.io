@@ -6,14 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://kingschan1204.github.io">
-  <title>Eureka高可用3节点配置 | kings.chan</title>
+  <title>Eureka高可用3节点配置 | kings.chan的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Eureka Server除了单点运行之外，还可以通过运行多个实例，并进行互相注册的方式来实现高可用的部署，所以我们只需要将Eureke Server配置其他可用的serviceUrl就能实现高可用部署。  3节点实现Eureka高可用  Eureka Server可以运行多个实例来构建集群，解决单点问题，但不同于ZooKeeper的选举leader的过程，Eureka Server采用的是Pe">
 <meta name="keywords" content="eureka,高可用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Eureka高可用3节点配置">
 <meta property="og:url" content="https://kingschan1204.github.io/2017/12/21/2017-12-21-eureka-ha-3node/index.html">
-<meta property="og:site_name" content="kings.chan">
+<meta property="og:site_name" content="kings.chan的博客">
 <meta property="og:description" content="Eureka Server除了单点运行之外，还可以通过运行多个实例，并进行互相注册的方式来实现高可用的部署，所以我们只需要将Eureke Server配置其他可用的serviceUrl就能实现高可用部署。  3节点实现Eureka高可用  Eureka Server可以运行多个实例来构建集群，解决单点问题，但不同于ZooKeeper的选举leader的过程，Eureka Server采用的是Pe">
 <meta property="og:image" content="https://kingschan1204.github.io/images/springcloud/eureka-ha-3node.png">
 <meta property="og:updated_time" content="2017-12-27T10:48:47.911Z">
@@ -22,7 +22,7 @@
 <meta name="twitter:description" content="Eureka Server除了单点运行之外，还可以通过运行多个实例，并进行互相注册的方式来实现高可用的部署，所以我们只需要将Eureke Server配置其他可用的serviceUrl就能实现高可用部署。  3节点实现Eureka高可用  Eureka Server可以运行多个实例来构建集群，解决单点问题，但不同于ZooKeeper的选举leader的过程，Eureka Server采用的是Pe">
 <meta name="twitter:image" content="https://kingschan1204.github.io/images/springcloud/eureka-ha-3node.png">
   
-    <link rel="alternative" href="/atom.xml" title="kings.chan" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="kings.chan的博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -37,6 +37,16 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?2e98e1c2b9e788fef59c746f84208c8e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
 
@@ -338,6 +348,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#3节点实现Eureka高可用"><span class="toc-number">1.</span> <span class="toc-text">3节点实现Eureka高可用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是自我保护模式？"><span class="toc-number">1.0.1.</span> <span class="toc-text">什么是自我保护模式？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#application-yml高可用配置"><span class="toc-number">1.1.</span> <span class="toc-text">application.yml高可用配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#注意这里："><span class="toc-number">1.1.1.</span> <span class="toc-text">注意这里：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改HOST"><span class="toc-number">1.2.</span> <span class="toc-text">修改HOST</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#增加："><span class="toc-number">1.2.1.</span> <span class="toc-text">增加：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#客户端配置"><span class="toc-number">2.</span> <span class="toc-text">客户端配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#配置application-yml"><span class="toc-number">2.1.</span> <span class="toc-text">配置application.yml</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

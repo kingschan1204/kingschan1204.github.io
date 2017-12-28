@@ -6,14 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://kingschan1204.github.io">
-  <title>linux常用命令整理 | kings.chan</title>
+  <title>linux常用命令整理 | kings.chan的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="linux 目录1234567891011121314151617181920212223242526/bin：bin是Binary的缩写, 这个目录存放着最经常使用的命令。/boot：这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。/dev ：dev是Device(设备)的缩写, 该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux常用命令整理">
 <meta property="og:url" content="https://kingschan1204.github.io/2017/12/01/2017-12-01-linux-common-cmd/index.html">
-<meta property="og:site_name" content="kings.chan">
+<meta property="og:site_name" content="kings.chan的博客">
 <meta property="og:description" content="linux 目录1234567891011121314151617181920212223242526/bin：bin是Binary的缩写, 这个目录存放着最经常使用的命令。/boot：这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。/dev ：dev是Device(设备)的缩写, 该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相">
 <meta property="og:image" content="http://www.runoob.com/wp-content/uploads/2014/06/003vPl7Rty6E8kZRlAEdc690.jpg">
 <meta property="og:image" content="http://www.runoob.com/wp-content/uploads/2014/06/363003_1227493859FdXT.png">
@@ -23,7 +23,7 @@
 <meta name="twitter:description" content="linux 目录1234567891011121314151617181920212223242526/bin：bin是Binary的缩写, 这个目录存放着最经常使用的命令。/boot：这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。/dev ：dev是Device(设备)的缩写, 该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相">
 <meta name="twitter:image" content="http://www.runoob.com/wp-content/uploads/2014/06/003vPl7Rty6E8kZRlAEdc690.jpg">
   
-    <link rel="alternative" href="/atom.xml" title="kings.chan" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="kings.chan的博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -38,6 +38,16 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?2e98e1c2b9e788fef59c746f84208c8e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
 
@@ -381,6 +391,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux-目录"><span class="toc-number">1.</span> <span class="toc-text">linux 目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改root密码"><span class="toc-number">2.</span> <span class="toc-text">修改root密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改IP地址"><span class="toc-number">3.</span> <span class="toc-text">修改IP地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ifcfg-eth0文件说明"><span class="toc-number">4.</span> <span class="toc-text">ifcfg-eth0文件说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看linux发行版本"><span class="toc-number">5.</span> <span class="toc-text">查看linux发行版本</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件"><span class="toc-number"></span> <span class="toc-text">文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件属性"><span class="toc-number">1.</span> <span class="toc-text">文件属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更改文件属主"><span class="toc-number">2.</span> <span class="toc-text">更改文件属主</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更改文件9个属性"><span class="toc-number">3.</span> <span class="toc-text">更改文件9个属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制文件"><span class="toc-number">4.</span> <span class="toc-text">复制文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除目录"><span class="toc-number">5.</span> <span class="toc-text">删除目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#移动文件"><span class="toc-number">6.</span> <span class="toc-text">移动文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重命名"><span class="toc-number">7.</span> <span class="toc-text">重命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看端口占用情况"><span class="toc-number">8.</span> <span class="toc-text">查看端口占用情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看端口属于哪个程序"><span class="toc-number">9.</span> <span class="toc-text">查看端口属于哪个程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#以树状图列出目录的内容"><span class="toc-number">10.</span> <span class="toc-text">以树状图列出目录的内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件下载"><span class="toc-number">11.</span> <span class="toc-text">文件下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#远程登录"><span class="toc-number">12.</span> <span class="toc-text">远程登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看机器的负载情况"><span class="toc-number">13.</span> <span class="toc-text">查看机器的负载情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看系统内存的使用情况"><span class="toc-number">14.</span> <span class="toc-text">查看系统内存的使用情况</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

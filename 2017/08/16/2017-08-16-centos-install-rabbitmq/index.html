@@ -6,14 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://kingschan1204.github.io">
-  <title>Centos7安装RabbitMQ | kings.chan</title>
+  <title>Centos7安装RabbitMQ | kings.chan的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="RabbitMQ是实现AMQP（高级消息队列协议）的消息中间件的一种，最初起源于金融系统，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。消息中间件主要用于组件之间的解耦，消息的发送者无需知道消息使用者的存在，反之亦然。MQ 全称为 Message Queue, 消息队列（MQ）是一种应用程序对应用程序的通信方法。应用程序通过读写出入队列的消息（针对应用程序的数据）来通">
 <meta name="keywords" content="rabbitmq,linux,安装">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Centos7安装RabbitMQ">
 <meta property="og:url" content="https://kingschan1204.github.io/2017/08/16/2017-08-16-centos-install-rabbitmq/index.html">
-<meta property="og:site_name" content="kings.chan">
+<meta property="og:site_name" content="kings.chan的博客">
 <meta property="og:description" content="RabbitMQ是实现AMQP（高级消息队列协议）的消息中间件的一种，最初起源于金融系统，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。消息中间件主要用于组件之间的解耦，消息的发送者无需知道消息使用者的存在，反之亦然。MQ 全称为 Message Queue, 消息队列（MQ）是一种应用程序对应用程序的通信方法。应用程序通过读写出入队列的消息（针对应用程序的数据）来通">
 <meta property="og:image" content="https://kingschan1204.github.io/microservices/bus/res/show-centos-version.png">
 <meta property="og:image" content="https://kingschan1204.github.io/microservices/bus/res/erlang-release.png">
@@ -26,7 +26,7 @@
 <meta name="twitter:description" content="RabbitMQ是实现AMQP（高级消息队列协议）的消息中间件的一种，最初起源于金融系统，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。消息中间件主要用于组件之间的解耦，消息的发送者无需知道消息使用者的存在，反之亦然。MQ 全称为 Message Queue, 消息队列（MQ）是一种应用程序对应用程序的通信方法。应用程序通过读写出入队列的消息（针对应用程序的数据）来通">
 <meta name="twitter:image" content="https://kingschan1204.github.io/microservices/bus/res/show-centos-version.png">
   
-    <link rel="alternative" href="/atom.xml" title="kings.chan" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="kings.chan的博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -41,6 +41,16 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?2e98e1c2b9e788fef59c746f84208c8e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
 
@@ -373,6 +383,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#安装Erlang"><span class="toc-number">1.</span> <span class="toc-text">安装Erlang</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装RabbitMQ"><span class="toc-number">2.</span> <span class="toc-text">安装RabbitMQ</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.1.</span> <span class="toc-text">安装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#启动服务"><span class="toc-number">3.</span> <span class="toc-text">启动服务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置"><span class="toc-number">4.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#登录成功后的控制面板"><span class="toc-number">4.1.</span> <span class="toc-text">登录成功后的控制面板</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>
