@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="https://kingschan1204.github.io">
   <title>设置centos7的YUM源为国内阿里云源 | kings.chan的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="阿里云Linux安装镜像源地址：12http://mirrors.aliyun.com/ http://mirrors.aliyun.com/repo/ CentOS系统更换软件安装源 第一步：备份你的原镜像文件，以免出错后可以恢复。1mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup  第二步">
+  <meta name="description" content="阿里云Linux安装镜像源地址：12http://mirrors.aliyun.com/ http://mirrors.aliyun.com/repo/ CentOS系统更换软件安装源 第一步：备份你的原镜像文件，以免出错后可以恢复。">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设置centos7的YUM源为国内阿里云源">
 <meta property="og:url" content="https://kingschan1204.github.io/2017/11/14/2017-11-14-centos-set-aliyun-repo/index.html">
 <meta property="og:site_name" content="kings.chan的博客">
-<meta property="og:description" content="阿里云Linux安装镜像源地址：12http://mirrors.aliyun.com/ http://mirrors.aliyun.com/repo/ CentOS系统更换软件安装源 第一步：备份你的原镜像文件，以免出错后可以恢复。1mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup  第二步">
-<meta property="og:updated_time" content="2017-12-27T10:02:02.814Z">
+<meta property="og:description" content="阿里云Linux安装镜像源地址：12http://mirrors.aliyun.com/ http://mirrors.aliyun.com/repo/ CentOS系统更换软件安装源 第一步：备份你的原镜像文件，以免出错后可以恢复。">
+<meta property="og:updated_time" content="2017-12-29T04:56:33.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设置centos7的YUM源为国内阿里云源">
-<meta name="twitter:description" content="阿里云Linux安装镜像源地址：12http://mirrors.aliyun.com/ http://mirrors.aliyun.com/repo/ CentOS系统更换软件安装源 第一步：备份你的原镜像文件，以免出错后可以恢复。1mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup  第二步">
+<meta name="twitter:description" content="阿里云Linux安装镜像源地址：12http://mirrors.aliyun.com/ http://mirrors.aliyun.com/repo/ CentOS系统更换软件安装源 第一步：备份你的原镜像文件，以免出错后可以恢复。">
   
     <link rel="alternative" href="/atom.xml" title="kings.chan的博客" type="application/atom+xml">
   
@@ -192,8 +192,10 @@ var _hmt = _hmt || [];
       
         <h2 id="阿里云Linux安装镜像源地址："><a href="#阿里云Linux安装镜像源地址：" class="headerlink" title="阿里云Linux安装镜像源地址："></a>阿里云Linux安装镜像源地址：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://mirrors.aliyun.com/ </span><br><span class="line">http://mirrors.aliyun.com/repo/</span><br></pre></td></tr></table></figure>
 <h3 id="CentOS系统更换软件安装源"><a href="#CentOS系统更换软件安装源" class="headerlink" title="CentOS系统更换软件安装源"></a>CentOS系统更换软件安装源</h3><blockquote>
-<p>第一步：备份你的原镜像文件，以免出错后可以恢复。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></table></figure></p>
+<p>第一步：备份你的原镜像文件，以免出错后可以恢复。</p>
 </blockquote>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></table></figure>
 <h3 id="第二步：下载新的CentOS-Base-repo-到-etc-yum-repos-d"><a href="#第二步：下载新的CentOS-Base-repo-到-etc-yum-repos-d" class="headerlink" title="第二步：下载新的CentOS-Base.repo 到/etc/yum.repos.d/"></a>第二步：下载新的CentOS-Base.repo 到/etc/yum.repos.d/</h3><blockquote>
 <p>CentOS 7<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br></pre></td></tr></table></figure></p>
 </blockquote>
@@ -477,6 +479,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">消息队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">rabbitmq</a>
               </li>
              
@@ -489,6 +499,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">eureka</a>
               </li>
              
@@ -497,11 +511,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">docker</a>
+                <a href="javascript:void(0)" class="js-tag color4">mac</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
             
             <div class="clearfix"></div>

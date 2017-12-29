@@ -197,19 +197,10 @@ var _hmt = _hmt || [];
 <h1 id="3节点实现Eureka高可用"><a href="#3节点实现Eureka高可用" class="headerlink" title="3节点实现Eureka高可用"></a>3节点实现Eureka高可用</h1><p><img src="/images/springcloud/eureka-ha-3node.png" alt=""></p>
 <blockquote>
 <p>Eureka Server可以运行多个实例来构建集群，解决单点问题，但不同于ZooKeeper的选举leader的过程，Eureka Server采用的是Peer to Peer对等通信。这是一种去中心化的架构，无master/slave区分，每一个Peer都是对等的。在这种架构中，节点通过彼此互相注册来提高可用性，每个节点需要添加一个或多个有效的serviceUrl指向其他节点。每个节点都可被视为其他节点的副本。</p>
-<p>如果某台Eureka Server宕机，Eureka Client的请求会自动切换到新的Eureka Server节点，当宕机的服务器重新恢复后，Eureka会再次将其纳入到服务器集群管理之中。当节点开始接受客户端请求时，所有的操作都会进行replicateToPeer（节点间复制）操作，将请求复制到其他Eureka Server当前所知的所有节点中。</p>
-<p>一个新的Eureka Server节点启动后，会首先尝试从邻近节点获取所有实例注册表信息，完成初始化。Eureka Server通过getEurekaServiceUrls()方法获取所有的节点，并且会通过心跳续约的方式定期更新。默认配置下，如果Eureka Server在一定时间内没有接收到某个服务实例的心跳，Eureka Server将会注销该实例（默认为90秒，通过eureka.instance.lease-expiration-duration-in-seconds配置）。当Eureka Server节点在短时间内丢失过多的心跳时（比如发生了网络分区故障），那么这个节点就会进入自我保护模式。</p>
 </blockquote>
-<h3 id="什么是自我保护模式？"><a href="#什么是自我保护模式？" class="headerlink" title="什么是自我保护模式？"></a>什么是自我保护模式？</h3><blockquote>
-<p>默认配置下，如果Eureka Server每分钟收到心跳续约的数量低于一个阈值（instance的数量<em>(60/每个instance的心跳间隔秒数)</em>自我保护系数），并且持续15分钟，就会触发自我保护。在自我保护模式中，Eureka Server会保护服务注册表中的信息，不再注销任何服务实例。当它收到的心跳数重新恢复到阈值以上时，该Eureka Server节点就会自动退出自我保护模式。它的设计哲学前面提到过，那就是宁可保留错误的服务注册信息，也不盲目注销任何可能健康的服务实例。该模式可以通过eureka.server.enable-self-preservation = false来禁用，同时eureka.instance.lease-renewal-interval-in-seconds可以用来更改心跳间隔，eureka.server.renewal-percent-threshold可以用来修改自我保护系数（默认0.85）。</p>
-</blockquote>
-<h2 id="application-yml高可用配置"><a href="#application-yml高可用配置" class="headerlink" title="application.yml高可用配置"></a>application.yml高可用配置</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  application:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">eureka-server</span></span><br><span class="line"><span class="attr">  profiles:</span></span><br><span class="line"><span class="attr">    active:</span> <span class="string">peer1</span> <span class="comment">#创建3个项目分别peer2,peer3</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">8762</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="attr">http://peer1:8761/eureka/,http://peer3:8763/eureka/</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    hostname:</span> <span class="string">peer2</span></span><br><span class="line"><span class="attr">  server:</span></span><br><span class="line"><span class="attr">    enable-self-preservation:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  profiles:</span> <span class="string">peer2</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">8761</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="attr">http://peer2:8762/eureka/,http://peer3:8763/eureka/</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    hostname:</span> <span class="string">peer1</span></span><br><span class="line"><span class="attr">  server:</span></span><br><span class="line"><span class="attr">    enable-self-preservation:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  profiles:</span> <span class="string">peer1</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">8763</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="attr">http://peer1:8761/eureka/,http://peer2:8762/eureka/</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    hostname:</span> <span class="string">peer3</span></span><br><span class="line"><span class="attr">  server:</span></span><br><span class="line"><span class="attr">    enable-self-preservation:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  profiles:</span> <span class="string">peer3</span></span><br></pre></td></tr></table></figure>
-<h3 id="注意这里："><a href="#注意这里：" class="headerlink" title="注意这里："></a>注意这里：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  enable-self-preservation: false</span><br></pre></td></tr></table></figure>
-<p>增加这个参数后的Eureka Server将关闭自我保护机制，这个机制在线上一般不是这样极端的关闭，而是通过调整阀值，这里为了测试服务是否能正常注销故意关闭的。如果不关闭，Eureka虽然发现服务down掉了，但是因为服务是单点的，所以会保留实例的注册记录在表内。</p>
-<h2 id="修改HOST"><a href="#修改HOST" class="headerlink" title="修改HOST"></a>修改HOST</h2><h3 id="增加："><a href="#增加：" class="headerlink" title="增加："></a>增加：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 peer1 peer2 peer3</span><br></pre></td></tr></table></figure>
-<h1 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h1><h2 id="配置application-yml"><a href="#配置application-yml" class="headerlink" title="配置application.yml"></a>配置application.yml</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">8000</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  application:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">demo-service</span></span><br><span class="line"><span class="attr">logging:</span>                                <span class="comment"># 配置日志级别，让hibernate打印出执行的SQL</span></span><br><span class="line"><span class="attr">  level:</span></span><br><span class="line"><span class="attr">    root:</span> <span class="string">INFO</span></span><br><span class="line">    <span class="string">org.hibernate:</span> <span class="string">INFO</span></span><br><span class="line">    <span class="string">org.hibernate.type.descriptor.sql.BasicBinder:</span> <span class="string">TRACE</span></span><br><span class="line">    <span class="string">org.hibernate.type.descriptor.sql.BasicExtractor:</span> <span class="string">TRACE</span></span><br><span class="line"><span class="comment">#监控的信息配置 http://&#123;host&#125;:&#123;port&#125;/info</span></span><br><span class="line"><span class="attr">info:</span></span><br><span class="line"><span class="attr">  app:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">@project.artifactId@</span></span><br><span class="line"><span class="attr">    encoding:</span> <span class="string">@project.build.sourceEncoding@</span></span><br><span class="line"><span class="attr">    java:</span></span><br><span class="line"><span class="attr">      source:</span> <span class="string">@java.version@</span></span><br><span class="line"><span class="attr">      target:</span> <span class="string">@java.version@</span></span><br><span class="line"><span class="comment">#注册服务</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="attr">http://peer1:8761/eureka/,http://peer2:8762/eureka/,http://peer3:8763/eureka/</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    prefer-ip-address:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p>创建配置完成后启动服务，刷新Eureka的页面即可看到对应服务已经存在。至此完成高可用改造！</p>
-
+        
+          <a class="article-more-a" href="/2017/12/21/2017-12-21-eureka-ha-3node/#more">more >></a>
+        
       
 
       
@@ -298,61 +289,9 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="linux-目录"><a href="#linux-目录" class="headerlink" title="linux 目录"></a>linux 目录</h2><p><img src="http://www.runoob.com/wp-content/uploads/2014/06/003vPl7Rty6E8kZRlAEdc690.jpg" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/bin：bin是Binary的缩写, 这个目录存放着最经常使用的命令。</span><br><span class="line">/boot：这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。</span><br><span class="line">/dev ：dev是Device(设备)的缩写, 该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相同的。</span><br><span class="line">/etc：这个目录用来存放所有的系统管理所需要的配置文件和子目录。</span><br><span class="line">/home：用户的主目录，在Linux中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的。</span><br><span class="line">/lib：这个目录里存放着系统最基本的动态连接共享库，其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库。</span><br><span class="line">/lost+found：这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件。</span><br><span class="line">/media：linux系统会自动识别一些设备，例如U盘、光驱等等，当识别后，linux会把识别的设备挂载到这个目录下。</span><br><span class="line">/mnt：系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将光驱挂载在/mnt/上，然后进入该目录就可以查看光驱里的内容了。</span><br><span class="line">/opt： 这是给主机额外安装软件所摆放的目录。比如你安装一个ORACLE数据库则就可以放到这个目录下。默认是空的。</span><br><span class="line">/proc：这个目录是一个虚拟的目录，它是系统内存的映射，我们可以通过直接访问这个目录来获取系统信息。</span><br><span class="line">这个目录的内容不在硬盘上而是在内存里，我们也可以直接修改里面的某些文件，比如可以通过下面的命令来屏蔽主机的ping命令，使别人无法ping你的机器：</span><br><span class="line">/root：该目录为系统管理员，也称作超级权限者的用户主目录。</span><br><span class="line">/sbin：s就是Super User的意思，这里存放的是系统管理员使用的系统管理程序。</span><br><span class="line">/selinux： 这个目录是Redhat/CentOS所特有的目录，Selinux是一个安全机制，类似于windows的防火墙，但是这套机制比较复杂，这个目录就是存放selinux相关的文件的。</span><br><span class="line">/srv： 该目录存放一些服务启动之后需要提取的数据。</span><br><span class="line">/sys： 这是linux2.6内核的一个很大的变化。该目录下安装了2.6内核中新出现的一个文件系统 sysfs 。</span><br><span class="line">sysfs文件系统集成了下面3种文件系统的信息：针对进程信息的proc文件系统、针对设备的devfs文件系统以及针对伪终端的devpts文件系统。</span><br><span class="line">该文件系统是内核设备树的一个直观反映。</span><br><span class="line">当一个内核对象被创建的时候，对应的文件和目录也在内核对象子系统中被创建。</span><br><span class="line">/tmp：这个目录是用来存放一些临时文件的。</span><br><span class="line">/usr： 这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似于windows下的program files目录。</span><br><span class="line">/usr/bin：系统用户使用的应用程序。</span><br><span class="line">/usr/sbin：超级用户使用的比较高级的管理程序和系统守护程序。</span><br><span class="line">/usr/src：内核源代码默认的放置目录。</span><br><span class="line">/var：这个目录中存放着在不断扩充着的东西，我们习惯将那些经常被修改的目录放在这个目录下。包括各种日志文件。</span><br></pre></td></tr></table></figure></p>
-<h2 id="修改root密码"><a href="#修改root密码" class="headerlink" title="修改root密码"></a>修改root密码</h2><p><code>sudo passwd root</code></p>
-<h2 id="修改IP地址"><a href="#修改IP地址" class="headerlink" title="修改IP地址"></a>修改IP地址</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> vi /etc/sysconfig/network-scripts/ifcfg-eth0  <span class="comment">#IP地址永久生效</span></span><br><span class="line"> 设置完后 :wq 保存</span><br><span class="line">  </span><br><span class="line">service network restart <span class="comment">#重启服务生效</span></span><br></pre></td></tr></table></figure>
-<h2 id="ifcfg-eth0文件说明"><a href="#ifcfg-eth0文件说明" class="headerlink" title="ifcfg-eth0文件说明"></a>ifcfg-eth0文件说明</h2><ul>
-<li>DEVICE=eth0  网卡对应的设备别名，如ifcfg-eth0第一块网卡 </li>
-<li>BOOTPROTO=static 网卡获得ip地址的方式 Static（静态 ip地址）</li>
-<li>dhcp（通过dhcp协议获取ip）</li>
-<li>bootip通过bootp协议获得的ip地址 </li>
-<li>BROADCAST=192.168.0.255 子网广播地址 </li>
-<li>HWADDR=00:50:56:8E:47:EE        网卡物理地址 </li>
-<li>IPADDR=12.168.1.117             网卡IP地址</li>
-<li>IPV6INIT=no                     是否启用</li>
-<li>IPV6IPV6_AUTOCONF=no </li>
-<li>NETMASK=255.255.255.0           网卡对应网络掩码 </li>
-<li>NETWORK=192.168.1.0             网卡对应的网络地址 </li>
-<li>ONBOOT=yes                     系统启动时是否设置此网络接口，设置为yes时，系统启动时激活此设备。默认设置为yes</li>
-<li>至于后面的 TYPE 和UUID这个就不用管了，这网卡的类型</li>
-</ul>
-<h2 id="查看linux发行版本"><a href="#查看linux发行版本" class="headerlink" title="查看linux发行版本"></a>查看linux发行版本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a </span><br><span class="line">bash: lsb_release: <span class="built_in">command</span> not found... <span class="comment">#如果提示这个请安装此命令</span></span><br><span class="line">yum install -y redhat-lsb</span><br><span class="line"></span><br><span class="line">cat /etc/redhat-release <span class="comment">#如果是redhat or centos</span></span><br><span class="line">cat /proc/version <span class="comment">#这个也可以</span></span><br></pre></td></tr></table></figure>
-<h1 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h1><h2 id="文件属性"><a href="#文件属性" class="headerlink" title="文件属性"></a>文件属性</h2><p><img src="http://www.runoob.com/wp-content/uploads/2014/06/363003_1227493859FdXT.png" alt=""></p>
-<h2 id="更改文件属主"><a href="#更改文件属主" class="headerlink" title="更改文件属主"></a>更改文件属主</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">chown [–R] 属主名 文件名</span><br><span class="line">chown [-R] 属主名：属组名 文件名</span><br><span class="line">-R：递归更改文件属组，就是在更改某个目录文件的属组时，如果加上-R的参数，那么该目录下的所有文件的属组都会更改。</span><br><span class="line"></span><br><span class="line">例如:</span><br><span class="line">将install.log的拥有者改为bin这个账号：</span><br><span class="line">[root@www ~] <span class="built_in">cd</span> ~</span><br><span class="line">[root@www ~]<span class="comment"># chown bin install.log</span></span><br><span class="line">[root@www ~]<span class="comment"># ls -l</span></span><br><span class="line">-rw-r--r--  1 bin  users 68495 Jun 25 08:53 install.log</span><br><span class="line"></span><br><span class="line">将install.log的拥有者与群组改回为root：</span><br><span class="line">[root@www ~]<span class="comment"># chown root:root install.log</span></span><br><span class="line">[root@www ~]<span class="comment"># ls -l</span></span><br><span class="line">-rw-r--r--  1 root root 68495 Jun 25 08:53 install.log</span><br></pre></td></tr></table></figure>
-<h2 id="更改文件9个属性"><a href="#更改文件9个属性" class="headerlink" title="更改文件9个属性"></a>更改文件9个属性</h2><blockquote>
-<p>Linux文件属性有两种设置方法，一种是数字，一种是符号。<br>Linux文件的基本权限就有九个，分别是owner/group/others三种身份各有自己的read/write/execute权限。文件的权限字符为：<code>『-rwxrwxrwx』</code>， 这九个权限是三个三个一组的！其中，我们可以使用数字来代表各个权限，各权限的分数对照表如下：</p>
-</blockquote>
-<p>r:4<br>w:2<br>x:1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod [-R] xyz 文件或目录</span><br><span class="line">-R : 进行递归(recursive)的持续变更，亦即连同次目录下的所有文件都会变更</span><br></pre></td></tr></table></figure></p>
-<p><strong>例如设定一个文件的所有权限</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@www ~]<span class="comment"># ls -al .bashrc</span></span><br><span class="line">-rw-r--r--  1 root root 395 Jul  4 11:45 .bashrc</span><br><span class="line">[root@www ~]<span class="comment"># chmod 777 .bashrc</span></span><br><span class="line">[root@www ~]<span class="comment"># ls -al .bashrc</span></span><br><span class="line">-rwxrwxrwx  1 root root 395 Jul  4 11:45 .bashrc</span><br></pre></td></tr></table></figure></p>
-<p>==如果要将权限变成 -rwxr-xr– 呢？那么权限的分数就成为 [4+2+1][4+0+1][4+0+0]=754==</p>
-<p><strong>符号类型改变文件权限</strong></p>
-<blockquote>
-<p>九个权限分别是(1)user (2)group (3)others三种身份,那么我们就可以由u, g, o来代表三种身份的权限！</p>
-<blockquote>
-<p>如果我们需要将文件权限设置为 -rwxr-xr– ，可以使用 chmod u=rwx,g=rx,o=r 文件名 来设定:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#  touch test1    // 创建 test1 文件</span><br><span class="line"># ls -al test1    // 查看 test1 默认权限</span><br><span class="line">-rw-r--r-- 1 root root 0 Nov 15 10:32 test1</span><br><span class="line"># chmod u=rwx,g=rx,o=r  test1    // 修改 test1 权限</span><br><span class="line"># ls -al test1</span><br><span class="line">-rwxr-xr-- 1 root root 0 Nov 15 10:32 test1</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-</blockquote>
-<p>==而如果是要将权限去掉而不改变其他已存在的权限呢？例如要拿掉全部人的可执行权限，则：==</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  chmod  a-x test1</span></span><br><span class="line"><span class="comment"># ls -al test1</span></span><br><span class="line">-rw-r--r-- 1 root root 0 Nov 15 10:32 test1</span><br></pre></td></tr></table></figure>
-<h2 id="复制文件"><a href="#复制文件" class="headerlink" title="复制文件"></a>复制文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp <span class="built_in">source</span> dest <span class="comment">#复制文件</span></span><br><span class="line">cp -r sourceFolder targetFolder <span class="comment">#递归复制整个文件夹</span></span><br><span class="line">scp sourecFile romoteUserName@remoteIp:remoteAddr <span class="comment">#远程拷贝</span></span><br></pre></td></tr></table></figure>
-<h2 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rmdir deleteEmptyFolder <span class="comment">#删除空目录 </span></span><br><span class="line">rm -rf deleteFile <span class="comment">#递归删除目录中所有内容</span></span><br></pre></td></tr></table></figure>
-<h2 id="移动文件"><a href="#移动文件" class="headerlink" title="移动文件"></a>移动文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /temp/movefile /targetFolder</span><br></pre></td></tr></table></figure>
-<h2 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv oldNameFile newNameFile</span><br></pre></td></tr></table></figure>
-<h2 id="查看端口占用情况"><a href="#查看端口占用情况" class="headerlink" title="查看端口占用情况"></a>查看端口占用情况</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tln | grep 8080 <span class="comment">#查看端口8080的使用情况</span></span><br></pre></td></tr></table></figure>
-<h2 id="查看端口属于哪个程序"><a href="#查看端口属于哪个程序" class="headerlink" title="查看端口属于哪个程序"></a>查看端口属于哪个程序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof -i :8080</span><br></pre></td></tr></table></figure>
-<h2 id="以树状图列出目录的内容"><a href="#以树状图列出目录的内容" class="headerlink" title="以树状图列出目录的内容"></a>以树状图列出目录的内容</h2><blockquote>
-<p>tree是一种递归目录列表命令，产生一个深度缩进列表文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">yum install tree #一般系统不带这个要安装</span><br><span class="line"></span><br><span class="line">tree命令行参数：</span><br><span class="line">-a 显示所有文件和目录。</span><br><span class="line">-A 使用ASNI绘图字符显示树状图而非以ASCII字符组合。</span><br><span class="line">-C 在文件和目录清单加上色彩，便于区分各种类型。</span><br><span class="line">-d 显示目录名称而非内容。</span><br><span class="line">-D 列出文件或目录的更改时间。</span><br><span class="line">-f 在每个文件或目录之前，显示完整的相对路径名称。</span><br><span class="line">-F 在执行文件，目录，Socket，符号连接，管道名称名称，各自加上&quot;*&quot;,&quot;/&quot;,&quot;=&quot;,&quot;@&quot;,&quot;|&quot;号。</span><br><span class="line">-g 列出文件或目录的所属群组名称，没有对应的名称时，则显示群组识别码。</span><br><span class="line">-i 不以阶梯状列出文件或目录名称。</span><br><span class="line">-I 不显示符合范本样式的文件或目录名称。</span><br><span class="line">-l 如遇到性质为符号连接的目录，直接列出该连接所指向的原始目录。</span><br><span class="line">-n 不在文件和目录清单加上色彩。</span><br><span class="line">-N 直接列出文件和目录名称，包括控制字符。</span><br><span class="line">-p 列出权限标示。</span><br><span class="line">-P 只显示符合范本样式的文件或目录名称。</span><br><span class="line">-q 用&quot;?&quot;号取代控制字符，列出文件和目录名称。</span><br><span class="line">-s 列出文件或目录大小。</span><br><span class="line">-t 用文件和目录的更改时间排序。</span><br><span class="line">-u 列出文件或目录的拥有者名称，没有对应的名称时，则显示用户识别码。</span><br><span class="line">-x 将范围局限在现行的文件系统中，若指定目录下的某些子目录，其存放于另一个文件系统上，则将该子目录予以排除在寻找范围外。</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<h2 id="文件下载"><a href="#文件下载" class="headerlink" title="文件下载"></a>文件下载</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://file.tgz </span><br><span class="line">curl http://file.tgz</span><br></pre></td></tr></table></figure>
-<h2 id="远程登录"><a href="#远程登录" class="headerlink" title="远程登录"></a>远程登录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh userName@ip</span><br></pre></td></tr></table></figure>
-<h2 id="查看机器的负载情况"><a href="#查看机器的负载情况" class="headerlink" title="查看机器的负载情况"></a>查看机器的负载情况</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$  uptime</span><br><span class="line">23:51:26 up 21:31,  1 user,  load average: 30.02, 26.43, 19.02</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>uptime可以快速查看机器的负载情况。在Linux系统中，这些数据表示等待CPU资源的进程和阻塞在不可中断IO进程（进程状态为D）的数量。这些数据可以让我们对系统资源使用有一个宏观的了解。<br>命令的输出分别表示1分钟、5分钟、15分钟的平均负载情况。通过这三个数据，可以了解服务器负载是在趋于紧张还是区域缓解。如果1分钟平均负载很高，而15分钟平均负载很低，说明服务器正在命令高负载情况，需要进一步排查CPU资源都消耗在了哪里。反之，如果15分钟平均负载很高，1分钟平均负载较低，则有可能是CPU资源紧张时刻已经过去。</p>
-</blockquote>
-<h2 id="查看系统内存的使用情况"><a href="#查看系统内存的使用情况" class="headerlink" title="查看系统内存的使用情况"></a>查看系统内存的使用情况</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]<span class="comment"># free -h</span></span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:            15G        228M         14G        8.3M        866M         14G</span><br><span class="line">Swap:          3.0G          0B        3.0G</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>free命令可以查看系统内存的使用情况，-h参数自动按合适的单位展示。最后两列分别表示用于IO缓存的内存数，和用于文件系统页缓存的内存数。需要注意的是，第二行-/+ buffers/cache，看上去缓存占用了大量内存空间。这是Linux系统的内存使用策略，尽可能的利用内存，如果应用程序需要内存，这部分内存会立即被回收并分配给应用程序。因此，这部分内存一般也被当成是可用内存。</p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2017/12/01/2017-12-01-linux-common-cmd/#more">more >></a>
+        
       
 
       
@@ -437,51 +376,10 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="查看docker信息（version、info）"><a href="#查看docker信息（version、info）" class="headerlink" title="查看docker信息（version、info）"></a>查看docker信息（version、info）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看docker版本 </span></span><br><span class="line">docker version </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 显示docker系统的信息 </span></span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
-<h2 id="对image的操作（search、pull、images、rmi、history）"><a href="#对image的操作（search、pull、images、rmi、history）" class="headerlink" title="对image的操作（search、pull、images、rmi、history）"></a>对image的操作（search、pull、images、rmi、history）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检索image </span></span><br><span class="line">docker search image_name</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 下载image </span></span><br><span class="line">docker pull image_name </span><br><span class="line"><span class="comment">#列出镜像列表; -a, --all=false Show all images; --no-trunc=false Don't truncate output; -q, --quiet=false Only show numeric IDs </span></span><br><span class="line">docker images</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 删除一个或者多个镜像; -f, --force=false Force; --no-prune=false Do not delete untagged parents </span></span><br><span class="line">docker rmi image_name</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 显示一个镜像的历史; --no-trunc=false Don't truncate output; -q, --quiet=false Only show numeric IDs docker his</span></span><br></pre></td></tr></table></figure>
-<h2 id="启动容器（run）"><a href="#启动容器（run）" class="headerlink" title="启动容器（run）"></a>启动容器（run）</h2><blockquote>
-<p>docker容器可以理解为在沙盒中运行的进程。这个沙盒包 含了该进程运行所必须的资源，包括文件系统、系统类库、shell 环境等等。但这个沙盒默认是不会运行任何程序的。你需要在沙盒中运行一个进程来启动某一个容器。这个进程是该容器的唯一进程，所以当该进程结束的时候，容 器也会完全的停止。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在容器中运行"echo"命令，输出"hello word" </span></span><br><span class="line">docker run image_name <span class="built_in">echo</span> <span class="string">"hello word"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 交互式进入容器中 </span></span><br><span class="line">docker run -i -t image_name /bin/bash</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 在容器中安装新的程序 </span></span><br><span class="line">docker run image_name apt-get install -y app_name</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 在一次进刚才进入的容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -i -t [容器ID]</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<p><strong>run 参数</strong></p>
-<ul>
-<li></li>
-<li>-a stdin: 指定标准输入输出内容类型，可选 STDIN/STDOUT/STDERR 三项；</li>
-<li>-d: 后台运行容器，并返回容器ID；</li>
-<li>-i: 以交互模式运行容器，通常与 -t 同时使用；</li>
-<li>-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；</li>
-<li>–name=”nginx-lb”: 为容器指定一个名称；</li>
-<li>–dns 8.8.8.8: 指定容器使用的DNS服务器，默认和宿主一致；</li>
-<li>–dns-search example.com: 指定容器DNS搜索域名，默认和宿主一致；</li>
-<li>-h “mars”: 指定容器的hostname；</li>
-<li>-e username=”ritchie”: 设置环境变量；</li>
-<li>–env-file=[]: 从指定文件读入环境变量；</li>
-<li>–cpuset=”0-2” or –cpuset=”0,1,2”: 绑定容器到指定CPU运行；</li>
-<li>-m :设置容器使用内存最大值；</li>
-<li>–net=”bridge”: 指定容器的网络连接类型，支持 bridge/host/none/container: 四种类型；</li>
-<li>–link=[]: 添加链接到另一个容器；</li>
-<li>–expose=[]: 开放一个端口或一组端口；</li>
-</ul>
-<h2 id="查看容器（ps）"><a href="#查看容器（ps）" class="headerlink" title="查看容器（ps）"></a>查看容器（ps）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出当前所有正在运行的container </span></span><br><span class="line">docker ps</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 列出所有的container </span></span><br><span class="line">docker ps -a </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 列出最近一次启动的container </span></span><br><span class="line">docker ps -l</span><br></pre></td></tr></table></figure>
-<h2 id="保存对容器的修改（commit）"><a href="#保存对容器的修改（commit）" class="headerlink" title="保存对容器的修改（commit）"></a>保存对容器的修改（commit）</h2><blockquote>
-<p>当你对某一个容器做了修改之后（通过在容器中运行某一个命令），可以把对容器的修改保存下来，这样下次可以从保存后的最新状态运行该容器。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存对容器的修改; -a, --author="" Author; -m, --message="" Commit message </span></span><br><span class="line">docker commit ID new_image_name</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<h2 id="对容器的操作（rm、stop、start、kill、logs、diff、top、cp、restart、attach"><a href="#对容器的操作（rm、stop、start、kill、logs、diff、top、cp、restart、attach" class="headerlink" title="对容器的操作（rm、stop、start、kill、logs、diff、top、cp、restart、attach)"></a>对容器的操作（rm、stop、start、kill、logs、diff、top、cp、restart、attach)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除所有容器 </span></span><br><span class="line">docker rm `docker ps -a -q` </span><br><span class="line">    </span><br><span class="line"><span class="comment"># 删除单个容器; -f, --force=false; -l, --link=false Remove the specified link and not the underlying container; -v, --volumes=false Remove the volumes associated to the container </span></span><br><span class="line">docker rm Name/ID</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 停止、启动、杀死一个容器 </span></span><br><span class="line">docker stop Name/ID</span><br><span class="line">docker start Name/ID</span><br><span class="line">docker <span class="built_in">kill</span> Name/ID</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 从一个容器中取日志; -f, --follow=false Follow log output; -t, --timestamps=false Show timestamps </span></span><br><span class="line">docker logs Name/ID</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 列出一个容器里面被改变的文件或者目录，list列表会显示出三种事件，A 增加的，D 删除的，C 被改变的 </span></span><br><span class="line">docker diff Name/ID</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 显示一个运行的容器里面的进程信息 </span></span><br><span class="line">docker top Name/ID</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 从容器里面拷贝文件/目录到本地一个路径 </span></span><br><span class="line">docker cp Name:/container_path to_path </span><br><span class="line">docker cp ID:/container_path to_path </span><br><span class="line">    </span><br><span class="line"><span class="comment"># 重启一个正在运行的容器; -t, --time=10 Number of seconds to try to stop for before killing the container, Default=10 </span></span><br><span class="line">docker restart Name/ID</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 附加到一个运行的容器上面; --no-stdin=false Do not attach stdin; --sig-proxy=true Proxify all received signal to the process </span></span><br><span class="line">docker attach ID</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p> attach命令允许你查看或者影响一个运行的容器。你可以在同一时间attach同一个容器。你也可以从一个容器中脱离出来，是从CTRL-C。</p>
-</blockquote>
-<h1 id="保存和加载镜像（save、load）"><a href="#保存和加载镜像（save、load）" class="headerlink" title="保存和加载镜像（save、load）"></a>保存和加载镜像（save、load）</h1><blockquote>
-<p>当需要把一台机器上的镜像迁移到另一台机器的时候，需要保存镜像与加载镜像。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存镜像到一个tar包; -o, --output="" Write to an file </span></span><br><span class="line">docker save image_name -o file_path </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 加载一个tar包格式的镜像; -i, --input="" Read from a tar archive file </span></span><br><span class="line">docker load -i file_path </span><br><span class="line">    </span><br><span class="line"><span class="comment"># 机器a </span></span><br><span class="line">docker save image_name &gt; /home/save.tar</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 使用scp将save.tar拷到机器b上，然后:</span></span><br><span class="line">docker load &lt; /home/save.tar</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<h2 id="登录registry-server（login）"><a href="#登录registry-server（login）" class="headerlink" title="登录registry server（login）"></a>登录registry server（login）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 登陆registry server; -e, --email="" Email; -p, --password="" Password; -u, --username="" Usernamedocker login</span></span><br></pre></td></tr></table></figure>
-<h2 id="发布image（push）"><a href="#发布image（push）" class="headerlink" title="发布image（push）"></a>发布image（push）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 发布docker镜像 </span></span><br><span class="line">docker push new_image_name</span><br></pre></td></tr></table></figure>
-<h2 id="根据Dockerfile-构建出一个容器"><a href="#根据Dockerfile-构建出一个容器" class="headerlink" title="根据Dockerfile 构建出一个容器"></a>根据Dockerfile 构建出一个容器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#build </span><br><span class="line">   --no-cache=false Do not use cache when building the image </span><br><span class="line">   -q, --quiet=false Suppress the verbose output generated by the containers </span><br><span class="line">   --rm=true Remove intermediate containers after a successful build </span><br><span class="line">   -t, --tag=&quot;&quot; Repository name (and optionally a tag) to be applied to the resulting image in case of success </span><br><span class="line"> </span><br><span class="line">docker build -t image_name Dockerfile_path</span><br></pre></td></tr></table></figure>
-<h2 id="安装的docker服务器能访问harbor"><a href="#安装的docker服务器能访问harbor" class="headerlink" title="安装的docker服务器能访问harbor"></a>安装的docker服务器能访问harbor</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/docker/daemon.json #编辑此文件</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://9umsfnn6.mirror.aliyuncs.com"</span>]</span><br><span class="line">  , <span class="attr">"insecure-registries"</span>:[<span class="string">"192.168.10.241:5000"</span>,<span class="string">"192.168.10.238"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">docker login 仓库地址  #然后就可以登录harbor了</span><br></pre></td></tr></table></figure>
-<h2 id="spring-boot-Dockerfile通用模板"><a href="#spring-boot-Dockerfile通用模板" class="headerlink" title="spring boot Dockerfile通用模板"></a>spring boot Dockerfile通用模板</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">FROM java:8</span><br><span class="line">VOLUME /tmp</span><br><span class="line">ADD xxxx.jar app.jar</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-Xmx1g&quot;,&quot;-jar&quot;,&quot;/app.jar&quot;]</span><br></pre></td></tr></table></figure>
-<h2 id="设置docker开机启动"><a href="#设置docker开机启动" class="headerlink" title="设置docker开机启动"></a>设置docker开机启动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig docker on <span class="comment">#开机启动</span></span><br></pre></td></tr></table></figure>
-<h2 id="docker-运行mysql"><a href="#docker-运行mysql" class="headerlink" title="docker 运行mysql"></a>docker 运行mysql</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.io/mysql <span class="comment">#拉取镜像</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#运行mysql镜像</span></span><br><span class="line">docker run -d --privileged=<span class="literal">true</span> --name imysql -v /home/kingschan/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 mysql </span><br><span class="line"></span><br><span class="line">--privileged=<span class="literal">true</span> :给容器加上特定权限 不然会报permission denied出错 使用该参数，container内的root拥有真正的root权限</span><br><span class="line">-d : --detach，后台运行。</span><br><span class="line">--name : 为你的镜像创建一个别名，该别名用于更好操作</span><br><span class="line">-p : 映射端口，一般我们会将默认端口进行更改，避免与本机的mysql端口冲突，如果你宿主机有mysql，请更改端口，如 -p 33060:3306</span><br><span class="line">-e : 环境变量。为mysql的root用户设置密码为123456</span><br><span class="line">-v : 指定数据卷，意思就是将mysql容器中的/var/lib/mysql（这个是数据库所有数据信息文件）映射到宿主机/home/kingschan/mysql里面</span><br><span class="line"></span><br><span class="line">docker <span class="built_in">exec</span> -ti imysql /bin/bash</span><br></pre></td></tr></table></figure>
-<h2 id="查看容器ip地址"><a href="#查看容器ip地址" class="headerlink" title="查看容器ip地址"></a>查看容器ip地址</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect 容器 | grep <span class="string">"IPAddress"</span></span><br></pre></td></tr></table></figure>
-<h1 id="部署Rancher"><a href="#部署Rancher" class="headerlink" title="部署Rancher"></a>部署Rancher</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -d --restart=unless-stopped -p 8080:8080 rancher/server:stable <span class="comment">#安装rancher服务器</span></span><br></pre></td></tr></table></figure>
-<h2 id="删除所有容器"><a href="#删除所有容器" class="headerlink" title="删除所有容器"></a>删除所有容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除所有容器 </span></span><br><span class="line">docker rm $(docker ps -a -q)</span><br></pre></td></tr></table></figure>
-<h2 id="监控容器里的spring-boot-应用"><a href="#监控容器里的spring-boot-应用" class="headerlink" title="监控容器里的spring boot 应用"></a>监控容器里的spring boot 应用</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Xmx1g -Djava.rmi.server.hostname=192.168.10.112 -Dcom.sun.management.jmxremote.port=9090 -Dcom.sun.management.jmxremote.rmi.port=9090 -Dcom.sun.management.jmxremote.local.only=<span class="literal">false</span> -Dcom.sun.management.jmxremote=<span class="literal">true</span> -Dcom.sun.management.jmxremote.ssl=<span class="literal">false</span> -Dcom.sun.management.jmxremote.authenticate=<span class="literal">false</span> -jar /home/work/project.jar</span><br></pre></td></tr></table></figure>
+<h2 id="对image的操作（search、pull、images、rmi、history）"><a href="#对image的操作（search、pull、images、rmi、history）" class="headerlink" title="对image的操作（search、pull、images、rmi、history）"></a>对image的操作（search、pull、images、rmi、history）</h2>
+        
+          <a class="article-more-a" href="/2017/11/30/2017-11-30-docker-some-cmd/#more">more >></a>
+        
       
 
       
@@ -567,16 +465,11 @@ var _hmt = _hmt || [];
       
         <h2 id="阿里云Linux安装镜像源地址："><a href="#阿里云Linux安装镜像源地址：" class="headerlink" title="阿里云Linux安装镜像源地址："></a>阿里云Linux安装镜像源地址：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://mirrors.aliyun.com/ </span><br><span class="line">http://mirrors.aliyun.com/repo/</span><br></pre></td></tr></table></figure>
 <h3 id="CentOS系统更换软件安装源"><a href="#CentOS系统更换软件安装源" class="headerlink" title="CentOS系统更换软件安装源"></a>CentOS系统更换软件安装源</h3><blockquote>
-<p>第一步：备份你的原镜像文件，以免出错后可以恢复。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br></pre></td></tr></table></figure></p>
+<p>第一步：备份你的原镜像文件，以免出错后可以恢复。</p>
 </blockquote>
-<h3 id="第二步：下载新的CentOS-Base-repo-到-etc-yum-repos-d"><a href="#第二步：下载新的CentOS-Base-repo-到-etc-yum-repos-d" class="headerlink" title="第二步：下载新的CentOS-Base.repo 到/etc/yum.repos.d/"></a>第二步：下载新的CentOS-Base.repo 到/etc/yum.repos.d/</h3><blockquote>
-<p>CentOS 7<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<h3 id="第三步：运行yum-makecache生成缓存"><a href="#第三步：运行yum-makecache生成缓存" class="headerlink" title="第三步：运行yum makecache生成缓存"></a>第三步：运行yum makecache生成缓存</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>这样就OK了。</p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2017/11/14/2017-11-14-centos-set-aliyun-repo/#more">more >></a>
+        
       
 
       
@@ -668,40 +561,9 @@ var _hmt = _hmt || [];
 <li>RabbitMQ 官网下载：<a href="http://www.rabbitmq.com/download.html" target="_blank" rel="noopener">http://www.rabbitmq.com/download.html</a></li>
 <li>RabbitMQ 官网安装文档：<a href="http://www.rabbitmq.com/install-rpm.html" target="_blank" rel="noopener">http://www.rabbitmq.com/install-rpm.html</a></li>
 </ul>
-<h1 id="安装Erlang"><a href="#安装Erlang" class="headerlink" title="安装Erlang"></a>安装Erlang</h1><blockquote>
-<p>由于RabbitMQ是用<code>Erlang</code>开发的，所以我们需要先安装Erlang ,在RabbitMQ官网提供了Erlang的安装包。</p>
-</blockquote>
-<p><img src="https://kingschan1204.github.io/microservices/bus/res/show-centos-version.png" alt="centos7"></p>
-<p><img src="https://kingschan1204.github.io/microservices/bus/res/erlang-release.png" alt="elang版本"></p>
-<p>于上图所示我的系统是centos7 所以我安装的倒数第二个。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh rabbitmq-server-3.6.10-1.el7.noarch.rpm</span><br></pre></td></tr></table></figure></p>
-<h1 id="安装RabbitMQ"><a href="#安装RabbitMQ" class="headerlink" title="安装RabbitMQ"></a>安装RabbitMQ</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc</span><br></pre></td></tr></table></figure>
-<p>去官网下载安装包 <a href="http://www.rabbitmq.com/download.html" target="_blank" rel="noopener">http://www.rabbitmq.com/download.html</a></p>
-<p><img src="https://kingschan1204.github.io/microservices/bus/res/rabbitmq-download.png" alt="ribbitMQ下载地址"><br>在浏览器右键复制链接然后在linux 下执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.10/rabbitmq-server-3.6.10-1.el7.noarch.rpm</span><br></pre></td></tr></table></figure></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y rabbitmq-server-3.6.1-1.noarch.rpm</span><br></pre></td></tr></table></figure>
-<h1 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h1><p>先看下自己的主机名：hostname，我的主机名是：<code>micro2</code><br>先修改一下 host 文件：vim /etc/hosts，添加一行：127.0.0.1 micro2</p>
-<ul>
-<li>启动：service rabbitmq-server start</li>
-<li>停止：service rabbitmq-server stop</li>
-<li>重启：service rabbitmq-server restart</li>
-<li>设置开机启动：chkconfig rabbitmq-server on</li>
-</ul>
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>查找默认配置位置：find / -name “rabbitmq.config.example”，我这边搜索结果是：/usr/share/doc/rabbitmq-server-3.6.10/rabbitmq.config.example</p>
-<p><img src="https://kingschan1204.github.io/microservices/bus/res/command-find-rabbit-config.png" alt="rabbitmq config"></p>
-<ul>
-<li>复制默认配置：cp /usr/share/doc/rabbitmq-server-3.6.10/rabbitmq.config.example /etc/rabbitmq/</li>
-<li>修改配置文件名：cd /etc/rabbitmq ; mv rabbitmq.config.example rabbitmq.config</li>
-<li>编辑配置文件，开启用户远程访问：vim rabbitmq.config</li>
-<li>在 64 行，默认有这样一句话：%% {loopback_users, []},，注意，该语句最后有一个逗号，等下是要去掉的</li>
-<li>我们需要改为：{loopback_users, []}，</li>
-<li>开启 Web 界面管理：rabbitmq-plugins enable rabbitmq_management</li>
-<li>重启 RabbitMQ 服务：service rabbitmq-server restart</li>
-<li>浏览器访问：<a href="http://192.168.x.xxx:15672" target="_blank" rel="noopener">http://192.168.x.xxx:15672</a> 默认管理员账号：guest 默认管理员密码：guest</li>
-</ul>
-<blockquote>
-<p>翻看官方的release文档后，得知由于账号guest具有所有的操作权限，并且又是默认账号，出于安全因素的考虑，guest用户只能通过localhost登陆使用，并建议修改guest用户的密码以及新建其他账号管理使用rabbitmq(该功能是在3.3.0版本引入的)。<code>{loopback_users, []}， 这一句就是让所有地方都可以用guest登录</code></p>
-</blockquote>
-<h2 id="登录成功后的控制面板"><a href="#登录成功后的控制面板" class="headerlink" title="登录成功后的控制面板"></a>登录成功后的控制面板</h2><p><img src="https://kingschan1204.github.io/microservices/bus/res/rabbitmq-dashboard.png" alt="ribbitMQ dashboard"></p>
-
+        
+          <a class="article-more-a" href="/2017/08/16/2017-08-16-centos-install-rabbitmq/#more">more >></a>
+        
       
 
       
@@ -773,6 +635,100 @@ var _hmt = _hmt || [];
 
 
   
+    <article id="post-2017-04-14-message-queue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/14/2017-04-14-message-queue/">消息队列</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/14/2017-04-14-message-queue/" class="archive-article-date">
+  	<time datetime="2017-04-14T01:37:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、消息队列概述"><a href="#一、消息队列概述" class="headerlink" title="一、消息队列概述"></a>一、消息队列概述</h2><p>消息队列中间件是分布式系统中重要的组件，主要解决应用耦合，异步消息，流量削锋等问题。实现高性能，高可用，可伸缩和最终一致性架构。是大型分布式系统不可缺少的中间件。</p>
+<p>目前在生产环境，使用较多的消息队列有ActiveMQ，RabbitMQ，ZeroMQ，Kafka，MetaMQ，RocketMQ等。</p>
+<h2 id="二、消息队列应用场景"><a href="#二、消息队列应用场景" class="headerlink" title="二、消息队列应用场景"></a>二、消息队列应用场景</h2><p>以下介绍消息队列在实际应用中常用的使用场景。异步处理，应用解耦，流量削锋和消息通讯四个场景。</p>
+<h3 id="2-1异步处理"><a href="#2-1异步处理" class="headerlink" title="2.1异步处理"></a>2.1异步处理</h3><p>场景说明：用户注册后，需要发注册邮件和注册短信。传统的做法有两种1.串行的方式；2.并行方式。<br>
+        
+          <a class="article-more-a" href="/2017/04/14/2017-04-14-message-queue/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">消息队列</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">rabbitmq</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/技术笔记//" class="article-tag-list-link color5">技术笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/14/2017-04-14-message-queue/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-2017-03-01-git-common-cmd-note" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -802,20 +758,9 @@ var _hmt = _hmt || [];
 <p><code>Index / Stage</code>：暂存区</p>
 <p><code>Repository</code>：仓库区（或本地仓库）</p>
 <p><code>Remote</code>：远程仓库</p>
-<h2 id="一、新建代码库"><a href="#一、新建代码库" class="headerlink" title="一、新建代码库"></a>一、新建代码库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在当前目录新建一个Git代码库</span></span><br><span class="line"> git init</span><br><span class="line"><span class="comment"># 新建一个目录，将其初始化为Git代码库</span></span><br><span class="line"> git init [project-name]</span><br><span class="line"><span class="comment"># 下载一个项目和它的整个代码历史</span></span><br><span class="line"> git <span class="built_in">clone</span> [url]</span><br></pre></td></tr></table></figure>
-<h2 id="二、配置"><a href="#二、配置" class="headerlink" title="二、配置"></a>二、配置</h2><blockquote>
-<p>Git的设置文件为.gitconfig，它可以在用户主目录下（全局配置），也可以在项目目录下（项目配置）。</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示当前的Git配置</span></span><br><span class="line"> git config --list</span><br><span class="line"><span class="comment"># 编辑Git配置文件</span></span><br><span class="line"> git config -e [--global]</span><br><span class="line"><span class="comment"># 设置提交代码时的用户信息</span></span><br><span class="line"> git config [--global] user.name <span class="string">"[name]"</span></span><br><span class="line"> git config [--global] user.email <span class="string">"[email address]"</span></span><br></pre></td></tr></table></figure>
-<h2 id="三、增加-删除文件"><a href="#三、增加-删除文件" class="headerlink" title="三、增加/删除文件"></a>三、增加/删除文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加指定文件到暂存区</span></span><br><span class="line"> git add [file1] [file2] ...</span><br><span class="line"><span class="comment"># 添加指定目录到暂存区，包括子目录</span></span><br><span class="line"> git add [dir]</span><br><span class="line"><span class="comment"># 添加当前目录的所有文件到暂存区</span></span><br><span class="line"> git add .</span><br><span class="line"><span class="comment"># 添加每个变化前，都会要求确认</span></span><br><span class="line"><span class="comment"># 对于同一个文件的多处变化，可以实现分次提交</span></span><br><span class="line"> git add -p</span><br><span class="line"><span class="comment"># 删除工作区文件，并且将这次删除放入暂存区</span></span><br><span class="line"> git rm [file1] [file2] ...</span><br><span class="line"><span class="comment"># 停止追踪指定文件，但该文件会保留在工作区</span></span><br><span class="line"> git rm --cached [file]</span><br><span class="line"><span class="comment"># 改名文件，并且将这个改名放入暂存区</span></span><br><span class="line"> git mv [file-original] [file-renamed]</span><br></pre></td></tr></table></figure>
-<h2 id="四、代码提交"><a href="#四、代码提交" class="headerlink" title="四、代码提交"></a>四、代码提交</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 提交暂存区到仓库区</span></span><br><span class="line"> git commit -m [message]</span><br><span class="line"><span class="comment"># 提交暂存区的指定文件到仓库区</span></span><br><span class="line"> git commit [file1] [file2] ... -m [message]</span><br><span class="line"><span class="comment"># 提交工作区自上次commit之后的变化，直接到仓库区</span></span><br><span class="line"> git commit -a</span><br><span class="line"><span class="comment"># 提交时显示所有diff信息</span></span><br><span class="line"> git commit -v</span><br><span class="line"><span class="comment"># 使用一次新的commit，替代上一次提交</span></span><br><span class="line"><span class="comment"># 如果代码没有任何新变化，则用来改写上一次commit的提交信息</span></span><br><span class="line"> git commit --amend -m [message]</span><br><span class="line"><span class="comment"># 重做上一次commit，并包括指定文件的新变化</span></span><br><span class="line"> git commit --amend [file1] [file2] ...</span><br></pre></td></tr></table></figure>
-<h2 id="五、分支"><a href="#五、分支" class="headerlink" title="五、分支"></a>五、分支</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有本地分支</span></span><br><span class="line"> git branch</span><br><span class="line"><span class="comment"># 列出所有远程分支</span></span><br><span class="line"> git branch -r</span><br><span class="line"><span class="comment"># 列出所有本地分支和远程分支</span></span><br><span class="line"> git branch -a</span><br><span class="line"><span class="comment"># 新建一个分支，但依然停留在当前分支</span></span><br><span class="line"> git branch [branch-name]</span><br><span class="line"><span class="comment"># 新建一个分支，并切换到该分支</span></span><br><span class="line"> git checkout -b [branch]</span><br><span class="line"><span class="comment"># 新建一个分支，指向指定commit</span></span><br><span class="line"> git branch [branch] [commit]</span><br><span class="line"><span class="comment"># 新建一个分支，与指定的远程分支建立追踪关系</span></span><br><span class="line"> git branch --track [branch] [remote-branch]</span><br><span class="line"><span class="comment"># 切换到指定分支，并更新工作区</span></span><br><span class="line"> git checkout [branch-name]</span><br><span class="line"><span class="comment"># 切换到上一个分支</span></span><br><span class="line"> git checkout -</span><br><span class="line"><span class="comment"># 建立追踪关系，在现有分支与指定的远程分支之间</span></span><br><span class="line"> git branch --<span class="built_in">set</span>-upstream [branch] [remote-branch]</span><br><span class="line"><span class="comment"># 合并指定分支到当前分支</span></span><br><span class="line"> git merge [branch]</span><br><span class="line"><span class="comment"># 选择一个commit，合并进当前分支</span></span><br><span class="line"> git cherry-pick [commit]</span><br><span class="line"><span class="comment"># 删除分支</span></span><br><span class="line"> git branch -d [branch-name]</span><br><span class="line"><span class="comment"># 删除远程分支</span></span><br><span class="line"> git push origin --delete [branch-name]</span><br><span class="line"> git branch -dr [remote/branch]</span><br></pre></td></tr></table></figure>
-<h2 id="六、标签"><a href="#六、标签" class="headerlink" title="六、标签"></a>六、标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出所有tag</span></span><br><span class="line"> git tag</span><br><span class="line"><span class="comment"># 新建一个tag在当前commit</span></span><br><span class="line"> git tag [tag]</span><br><span class="line"><span class="comment"># 新建一个tag在指定commit</span></span><br><span class="line"> git tag [tag] [commit]</span><br><span class="line"><span class="comment"># 删除本地tag</span></span><br><span class="line"> git tag -d [tag]</span><br><span class="line"><span class="comment"># 删除远程tag</span></span><br><span class="line"> git push origin :refs/tags/[tagName]</span><br><span class="line"><span class="comment"># 查看tag信息</span></span><br><span class="line"> git show [tag]</span><br><span class="line"><span class="comment"># 提交指定tag</span></span><br><span class="line"> git push [remote] [tag]</span><br><span class="line"><span class="comment"># 提交所有tag</span></span><br><span class="line"> git push [remote] --tags</span><br><span class="line"><span class="comment"># 新建一个分支，指向某个tag</span></span><br><span class="line"> git checkout -b [branch] [tag]</span><br></pre></td></tr></table></figure>
-<h2 id="七、查看信息"><a href="#七、查看信息" class="headerlink" title="七、查看信息"></a>七、查看信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示有变更的文件</span></span><br><span class="line"> git status</span><br><span class="line"><span class="comment"># 显示当前分支的版本历史</span></span><br><span class="line"> git <span class="built_in">log</span></span><br><span class="line"><span class="comment"># 显示commit历史，以及每次commit发生变更的文件</span></span><br><span class="line"> git <span class="built_in">log</span> --<span class="built_in">stat</span></span><br><span class="line"><span class="comment"># 搜索提交历史，根据关键词</span></span><br><span class="line"> git <span class="built_in">log</span> -S [keyword]</span><br><span class="line"><span class="comment"># 显示某个commit之后的所有变动，每个commit占据一行</span></span><br><span class="line"> git <span class="built_in">log</span> [tag] HEAD --pretty=format:%s</span><br><span class="line"><span class="comment"># 显示某个commit之后的所有变动，其"提交说明"必须符合搜索条件</span></span><br><span class="line"> git <span class="built_in">log</span> [tag] HEAD --grep feature</span><br><span class="line"><span class="comment"># 显示某个文件的版本历史，包括文件改名</span></span><br><span class="line"> git <span class="built_in">log</span> --follow [file]</span><br><span class="line"> git whatchanged [file]</span><br><span class="line"><span class="comment"># 显示指定文件相关的每一次diff</span></span><br><span class="line"> git <span class="built_in">log</span> -p [file]</span><br><span class="line"><span class="comment"># 显示过去5次提交</span></span><br><span class="line"> git <span class="built_in">log</span> -5 --pretty --oneline</span><br><span class="line"><span class="comment"># 显示所有提交过的用户，按提交次数排序</span></span><br><span class="line"> git shortlog -sn</span><br><span class="line"><span class="comment"># 显示指定文件是什么人在什么时间修改过</span></span><br><span class="line"> git blame [file]</span><br><span class="line"><span class="comment"># 显示暂存区和工作区的差异</span></span><br><span class="line"> git diff</span><br><span class="line"><span class="comment"># 显示暂存区和上一个commit的差异</span></span><br><span class="line"> git diff --cached [file]</span><br><span class="line"><span class="comment"># 显示工作区与当前分支最新commit之间的差异</span></span><br><span class="line"> git diff HEAD</span><br><span class="line"><span class="comment"># 显示两次提交之间的差异</span></span><br><span class="line"> git diff [first-branch]...[second-branch]</span><br><span class="line"><span class="comment"># 显示今天你写了多少行代码</span></span><br><span class="line"> git diff --shortstat <span class="string">"@&#123;0 day ago&#125;"</span></span><br><span class="line"><span class="comment"># 显示某次提交的元数据和内容变化</span></span><br><span class="line"> git show [commit]</span><br><span class="line"><span class="comment"># 显示某次提交发生变化的文件</span></span><br><span class="line"> git show --name-only [commit]</span><br><span class="line"><span class="comment"># 显示某次提交时，某个文件的内容</span></span><br><span class="line"> git show [commit]:[filename]</span><br><span class="line"><span class="comment"># 显示当前分支的最近几次提交</span></span><br><span class="line"> git reflog</span><br></pre></td></tr></table></figure>
-<h2 id="八、远程同步"><a href="#八、远程同步" class="headerlink" title="八、远程同步"></a>八、远程同步</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载远程仓库的所有变动</span></span><br><span class="line"> git fetch [remote]</span><br><span class="line"><span class="comment"># 显示所有远程仓库</span></span><br><span class="line"> git remote -v</span><br><span class="line"><span class="comment"># 显示某个远程仓库的信息</span></span><br><span class="line"> git remote show [remote]</span><br><span class="line"><span class="comment"># 增加一个新的远程仓库，并命名</span></span><br><span class="line"> git remote add [shortname] [url]</span><br><span class="line"><span class="comment"># 取回远程仓库的变化，并与本地分支合并</span></span><br><span class="line"> git pull [remote] [branch]</span><br><span class="line"><span class="comment"># 上传本地指定分支到远程仓库</span></span><br><span class="line"> git push [remote] [branch]</span><br><span class="line"><span class="comment"># 强行推送当前分支到远程仓库，即使有冲突</span></span><br><span class="line"> git push [remote] --force</span><br><span class="line"><span class="comment"># 推送所有分支到远程仓库</span></span><br><span class="line"> git push [remote] --all</span><br></pre></td></tr></table></figure>
-<h2 id="九、撤销"><a href="#九、撤销" class="headerlink" title="九、撤销"></a>九、撤销</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恢复暂存区的指定文件到工作区</span></span><br><span class="line"> git checkout [file]</span><br><span class="line"><span class="comment"># 恢复某个commit的指定文件到暂存区和工作区</span></span><br><span class="line"> git checkout [commit] [file]</span><br><span class="line"><span class="comment"># 恢复暂存区的所有文件到工作区</span></span><br><span class="line"> git checkout .</span><br><span class="line"><span class="comment"># 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变</span></span><br><span class="line"> git reset [file]</span><br><span class="line"><span class="comment"># 重置暂存区与工作区，与上一次commit保持一致</span></span><br><span class="line"> git reset --hard</span><br><span class="line"><span class="comment"># 重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变</span></span><br><span class="line"> git reset [commit]</span><br><span class="line"><span class="comment"># 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致</span></span><br><span class="line"> git reset --hard [commit]</span><br><span class="line"><span class="comment"># 重置当前HEAD为指定commit，但保持暂存区和工作区不变</span></span><br><span class="line"> git reset --keep [commit]</span><br><span class="line"><span class="comment"># 新建一个commit，用来撤销指定commit</span></span><br><span class="line"><span class="comment"># 后者的所有变化都将被前者抵消，并且应用到当前分支</span></span><br><span class="line"> git revert [commit]</span><br><span class="line"><span class="comment"># 暂时将未提交的变化移除，稍后再移入</span></span><br><span class="line"> git stash</span><br><span class="line"> git stash pop</span><br></pre></td></tr></table></figure>
-<h2 id="十、其他"><a href="#十、其他" class="headerlink" title="十、其他"></a>十、其他</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成一个可供发布的压缩包</span></span><br><span class="line"> git archive</span><br></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/03/01/2017-03-01-git-common-cmd-note/#more">more >></a>
+        
       
 
       
@@ -850,6 +795,193 @@ var _hmt = _hmt || [];
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/03/01/2017-03-01-git-common-cmd-note/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-2016-09-01-mac-develop-tools" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/01/2016-09-01-mac-develop-tools/">mac开发常用工具整理</a>
+    </h1>
+  
+
+        
+        <a href="/2016/09/01/2016-09-01-mac-develop-tools/" class="archive-article-date">
+  	<time datetime="2016-08-31T16:02:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="文档查看"><a href="#文档查看" class="headerlink" title="文档查看"></a>文档查看</h2><h3 id="Dash"><a href="#Dash" class="headerlink" title="Dash"></a>Dash</h3><p>　　写代码的时候是不是有些API记不住，比如画椭圆该用哪个类？计算开平方用什么函数？怎么连接远程的mysql服务器检索数据？这个时候一般怎么办？问度娘？问谷歌？直接查看在线编程文档？</p>
+<p>　　在国内问谷歌需要翻墙，那么涉及到另外工具的使用。查看在线文档，如果记不住入口网址怎么办？放收藏里啊，如果入口改变了呢？还是需要问搜索引擎啊！那么问题来了，度娘乱贴小广告咋办？用Dash吧，一个APP搜罗了这个世界上几乎所有的编程语言文档，而且更新速度快。</p>
+<p>　　软件主页以及下载地址<a href="https://kapeli.com/dash" target="_blank" rel="noopener">https://kapeli.com/dash</a></p>
+<h2 id="流程图设计"><a href="#流程图设计" class="headerlink" title="流程图设计"></a>流程图设计</h2><p>　　OmniGraffle有很多人推荐，不过笔者觉得这个软件太贵了，所以推荐了两款免费的软件流程设计工具。</p>
+<h3 id="XMind"><a href="#XMind" class="headerlink" title="XMind"></a>XMind</h3><p>　　主攻脑图（思维导图），流程图也支持，另外还有日程安排计划等额外的功能。</p>
+<p>　　软件主页以及下载地址<a href="http://www.xmind.net/" target="_blank" rel="noopener">http://www.xmind.net/</a></p>
+        
+          <a class="article-more-a" href="/2016/09/01/2016-09-01-mac-develop-tools/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">mac</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/技术笔记//" class="article-tag-list-link color5">技术笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/09/01/2016-09-01-mac-develop-tools/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-2015-12-03-git&amp;svn-difference" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/03/2015-12-03-git&svn-difference/">git与svn的区别</a>
+    </h1>
+  
+
+        
+        <a href="/2015/12/03/2015-12-03-git&svn-difference/" class="archive-article-date">
+  	<time datetime="2015-12-02T16:24:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-12-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>GIT不仅仅是个版本控制系统，它也是个内容管理系统(CMS),工作管理系统等。如果你是一个具有使用SVN背景的人，你需要做一定的思想转换，来适应GIT提供的一些概念和特征。所以，这篇文章的主要目的就是通过介绍GIT能做什么、它和SVN在深层次上究竟有什么不同来帮助你认识它。</p>
+</blockquote>
+<h3 id="1-GIT是分布式的，SVN不是："><a href="#1-GIT是分布式的，SVN不是：" class="headerlink" title="1.GIT是分布式的，SVN不是："></a>1.GIT是分布式的，SVN不是：</h3><p>这是GIT和其它非分布式的版本控制系统，例如SVN，CVS等，最核心的区别。如果你能理解这个概念，那么你就已经上手一半了。需要做一点声明，GIT并不是目前第一个或唯一的分布式版本控制系统。还有一些系统，例如Bitkeeper, Mercurial等，也是运行在分布式模式上的。但GIT在这方面做的更好，而且有更多强大的功能特征。</p>
+<p>GIT跟SVN一样有自己的集中式版本库或服务器。但，GIT更倾向于被使用于分布式模式，也就是每个开发人员从中心版本库/服务器上chect out代码后会在自己的机器上克隆一个自己的版本库。可以这样说，如果你被困在一个不能连接网络的地方时，就像在飞机上，地下室，电梯里等，你仍然能够提交文件，查看历史版本记录，创建项目分支，等。对一些人来说，这好像没多大用处，但当你突然遇到没有网络的环境时，这个将解决你的大麻烦。<br>
+        
+          <a class="article-more-a" href="/2015/12/03/2015-12-03-git&svn-difference/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/技术笔记//" class="article-tag-list-link color5">技术笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2015/12/03/2015-12-03-git&svn-difference/">展开全文 >></a>
         </p>
       
 
@@ -963,6 +1095,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">消息队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">rabbitmq</a>
               </li>
              
@@ -975,6 +1115,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">eureka</a>
               </li>
              
@@ -983,11 +1127,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">docker</a>
+                <a href="javascript:void(0)" class="js-tag color4">mac</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
             
             <div class="clearfix"></div>
