@@ -6,30 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://kingschan1204.github.io">
-  <title>hystrix实现原理 | kings.chan的博客</title>
+  <title>针对故障设计微服务架构 | kings.chan的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="流程图下图展示了当你使用 Hystrix 来包装你请求依赖服务时的流程：   接下来将详细介绍如下问题：  1.构建HystrixCommand或者HystrixObservableCommand对象 2.执行命令（即上述 Command 对象包装的逻辑） 3.结果是否有缓存 4.请求线路（类似电路）是否是开路 5.线程池/请求队列/信号量占满时会发生什么 6.使用HystrixObservabl">
-<meta name="keywords" content="spring cloud,hystrix">
+  <meta name="description" content="服务边界定义良好的微服务使得隔离故障成为可能。但是正如其它的分布式系统，网络，硬件或者应用层出问题的概率更高。服务依赖的后果是任何组件可能暂时对用户不可用。为了让局部故障的影响最小化，我们需要构建能优雅响应部分依赖中断运行的容错的服务。这篇文章介绍了RisingStack’s Node.js Consulting &amp;amp; Development experience里面关于构建高可用微服务最">
+<meta name="keywords" content="spring cloud,架构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hystrix实现原理">
-<meta property="og:url" content="https://kingschan1204.github.io/2017/12/29/2017-12-29-hystrix-execute-theory/index.html">
+<meta property="og:title" content="针对故障设计微服务架构">
+<meta property="og:url" content="https://kingschan1204.github.io/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/index.html">
 <meta property="og:site_name" content="kings.chan的博客">
-<meta property="og:description" content="流程图下图展示了当你使用 Hystrix 来包装你请求依赖服务时的流程：   接下来将详细介绍如下问题：  1.构建HystrixCommand或者HystrixObservableCommand对象 2.执行命令（即上述 Command 对象包装的逻辑） 3.结果是否有缓存 4.请求线路（类似电路）是否是开路 5.线程池/请求队列/信号量占满时会发生什么 6.使用HystrixObservabl">
-<meta property="og:image" content="http://res.51so.info/FlMGM-24VVe7tqbzGzhL9_L5Xao6">
-<meta property="og:image" content="http://res.51so.info/FixdLsg7cw9nkJIBPoCFoQMmc63r">
-<meta property="og:image" content="http://res.51so.info/Fscwhpss2b-WqmRMCiiHDLXsehJe">
-<meta property="og:image" content="http://res.51so.info/Fk9A7TNh9lLAGdmla04_mQ9SEbJs">
-<meta property="og:image" content="http://res.51so.info/FngxE8Apqv10SaF8FVWSKJqfdyrI">
-<meta property="og:image" content="http://res.51so.info/FsEeS4yOeN6ueARtRrjisz3lpYi2">
-<meta property="og:image" content="http://res.51so.info/FvnKC_5AUQ2Vqq9wd5jk8CXamZsb">
-<meta property="og:image" content="http://res.51so.info/FuI8s28gdskI-RzRiCF6YQ__Hd1B">
-<meta property="og:image" content="http://res.51so.info/FuJqSfHYZuCZXwLhGoxwkliH6jLo">
-<meta property="og:image" content="http://res.51so.info/FpfiNvAaDnpwKPq2AQNBJZkkkVGU">
-<meta property="og:updated_time" content="2017-12-29T10:25:20.630Z">
+<meta property="og:description" content="服务边界定义良好的微服务使得隔离故障成为可能。但是正如其它的分布式系统，网络，硬件或者应用层出问题的概率更高。服务依赖的后果是任何组件可能暂时对用户不可用。为了让局部故障的影响最小化，我们需要构建能优雅响应部分依赖中断运行的容错的服务。这篇文章介绍了RisingStack’s Node.js Consulting &amp;amp; Development experience里面关于构建高可用微服务最">
+<meta property="og:image" content="http://res.51so.info/Fqww81yclEy29nx_AGtPcYfKZW1x">
+<meta property="og:image" content="http://res.51so.info/FnzLUdTR8ta3Jp-OkY73ejqSAg1J">
+<meta property="og:image" content="http://res.51so.info/FqWtpVjblRawjLr6JuhfVNTsblms">
+<meta property="og:image" content="http://res.51so.info/Fio89XKxSyryekVrkAMiVo2mUuor">
+<meta property="og:image" content="http://res.51so.info/Fsdr6D9Gjjv1tGhr_Yzfb7SSOeUJ">
+<meta property="og:image" content="http://res.51so.info/FoYICwQsfpv_-cmvWgOHFuVohXTw">
+<meta property="og:image" content="http://res.51so.info/Frm4XDSXlmo0Da4kv7GVYvwPfLvp">
+<meta property="og:updated_time" content="2017-12-29T10:30:24.760Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hystrix实现原理">
-<meta name="twitter:description" content="流程图下图展示了当你使用 Hystrix 来包装你请求依赖服务时的流程：   接下来将详细介绍如下问题：  1.构建HystrixCommand或者HystrixObservableCommand对象 2.执行命令（即上述 Command 对象包装的逻辑） 3.结果是否有缓存 4.请求线路（类似电路）是否是开路 5.线程池/请求队列/信号量占满时会发生什么 6.使用HystrixObservabl">
-<meta name="twitter:image" content="http://res.51so.info/FlMGM-24VVe7tqbzGzhL9_L5Xao6">
+<meta name="twitter:title" content="针对故障设计微服务架构">
+<meta name="twitter:description" content="服务边界定义良好的微服务使得隔离故障成为可能。但是正如其它的分布式系统，网络，硬件或者应用层出问题的概率更高。服务依赖的后果是任何组件可能暂时对用户不可用。为了让局部故障的影响最小化，我们需要构建能优雅响应部分依赖中断运行的容错的服务。这篇文章介绍了RisingStack’s Node.js Consulting &amp;amp; Development experience里面关于构建高可用微服务最">
+<meta name="twitter:image" content="http://res.51so.info/Fqww81yclEy29nx_AGtPcYfKZW1x">
   
     <link rel="alternative" href="/atom.xml" title="kings.chan的博客" type="application/atom+xml">
   
@@ -181,232 +178,123 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-2017-12-29-hystrix-execute-theory" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-2017-12-29-designing-microservices-architecture-for-failure" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      hystrix实现原理
+      针对故障设计微服务架构
     </h1>
   
 
         
-        <a href="/2017/12/29/2017-12-29-hystrix-execute-theory/" class="archive-article-date">
-  	<time datetime="2017-12-29T07:22:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-29</time>
+        <a href="/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/" class="archive-article-date">
+  	<time datetime="2017-12-29T10:19:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p>下图展示了当你使用 Hystrix 来包装你请求依赖服务时的流程：</p>
-<p><img src="http://res.51so.info/FlMGM-24VVe7tqbzGzhL9_L5Xao6" alt="流程图"> </p>
-<p>接下来将详细介绍如下问题：</p>
-<ul>
-<li>1.构建<code>HystrixCommand</code>或者<code>HystrixObservableCommand</code>对象</li>
-<li>2.执行命令（即上述 Command 对象包装的逻辑）</li>
-<li>3.结果是否有缓存</li>
-<li>4.请求线路（类似电路）是否是开路</li>
-<li>5.线程池/请求队列/信号量占满时会发生什么</li>
-<li>6.使用<code>HystrixObservableCommand.construct()</code>还是<code>HystrixCommand.run()</code></li>
-<li>7.计算链路健康度</li>
-<li>8.失败回退逻辑</li>
-<li>9.返回正常回应<a id="more"></a>
-<h3 id="1-构建HystrixCommand或者HystrixObservableCommand对象"><a href="#1-构建HystrixCommand或者HystrixObservableCommand对象" class="headerlink" title="1. 构建HystrixCommand或者HystrixObservableCommand对象"></a>1. 构建<code>HystrixCommand</code>或者<code>HystrixObservableCommand</code>对象</h3></li>
-</ul>
-<p>使用 Hystrix 的第一步是创建一个<code>HystrixCommand</code>或者<code>HystrixObservableCommand</code>对象来表示你需要发给依赖服务的请求。你可以向构造器传递任意参数。</p>
-<p>若只期望依赖服务每次返回单一的回应，按如下方式构造一个<code>HystrixCommand</code>即可：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommand command = <span class="keyword">new</span> HystrixCommand(arg1, arg2);</span><br></pre></td></tr></table></figure>
-<p>若期望依赖服务返回一个 Observable，并应用『Observer』模式监听依赖服务的回应，可按如下方式构造一个<code>HystrixObservableCommand</code>：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixObservableCommand command = <span class="keyword">new</span> HystrixObservableCommand(arg1, arg2);</span><br></pre></td></tr></table></figure>
-<h3 id="2-执行命令"><a href="#2-执行命令" class="headerlink" title="2. 执行命令"></a>2. 执行命令</h3><p>Hystrix 命令提供四种方式（<code>HystrixCommand</code>支持所有四种方式，而<code>HystrixObservableCommand</code>仅支持后两种方式）来执行你包装的请求：</p>
-<ul>
-<li><p><code>execute()</code>—— 阻塞，当依赖服务响应（或者抛出异常/超时）时，返回结果</p>
+        <blockquote>
+<p>服务边界定义良好的微服务使得隔离故障成为可能。但是正如其它的分布式系统，网络，硬件或者应用层出问题的概率更高。服务依赖的后果是任何组件可能暂时对用户不可用。为了让局部故障的影响最小化，我们需要构建能优雅响应部分依赖中断运行的容错的服务。<br>这篇文章介绍了<a href="https://risingstack.com/" target="_blank" rel="noopener">RisingStack’s Node.js Consulting &amp; Development experience</a>里面关于构建高可用微服务最通用的技术和架构模式。</p>
+</blockquote>
+<p><strong>如果你不熟悉这篇文章里的模式，不一定意味着你做错了什么。构建高可用系统需要额外的开销。</strong></p>
+<h2 id="微服务的风险"><a href="#微服务的风险" class="headerlink" title="微服务的风险"></a>微服务的风险</h2><blockquote>
+<p>微服务架构把应用逻辑移到服务并通过网络层进行通信。网络层通信需要多个物理和逻辑层组件的协作，相比内存调动通信给系统带来了额外了延迟和复杂度。这种在分布式系统增加的复杂度使得某些网络异常的概率更高。</p>
+</blockquote>
+<p><a href="https://twitter.com/share?text=%23microservices%20allow%20you%20to%20achieve%20graceful%20service%20degradation%20as%20components%20can%20be%20set%20up%20to%20fail%20separately.;url=https://blog.risingstack.com/designing-microservices-architecture-for-failure" target="_blank" rel="noopener">#microservices allow you to achieve graceful service degradation as components can be set up to fail separately.</a><a href="https://twitter.com/share?text=%23microservices%20allow%20you%20to%20achieve%20graceful%20service%20degradation%20as%20components%20can%20be%20set%20up%20to%20fail%20separately.;url=https://blog.risingstack.com/designing-microservices-architecture-for-failure" target="_blank" rel="noopener">Click To Tweet</a></p>
+<blockquote>
+<p>微服务架构相比同构最大的好处是各个小组可以独立设计开发和部署服务，对服务的生命周期有完全控制权。同时意味着我们无法控制服务的依赖因为很有可能由别的小组管理。在微服务架构下，我们需要时刻提醒自己，别人提供的服务或者组件会因为错误的发布，配置或者迁移等其它改变导致短暂不可用。<br><a id="more"></a></p>
+<h2 id="服务优雅降级"><a href="#服务优雅降级" class="headerlink" title="服务优雅降级"></a>服务优雅降级</h2><p>微服务最大的优势之一就是可以通过隔离系统不同组件的异常实现服务的优雅降级。比如在一个图片分享的应用中，用户处于不能上传新照片，但是仍然可以浏览编辑和分享现有的照片。</p>
+</blockquote>
+<p><img src="http://res.51so.info/Fqww81yclEy29nx_AGtPcYfKZW1x" alt="Microservices fail separately in theory"></p>
+<p>微服务分别停服（理论上）</p>
+<p>大多数的这种情况难以实现这种优雅降级方案，因为分布式的应用互相依赖，并需要采用多种故障转移策略（本文会介绍部分）在应对短暂故障和中断。</p>
+<p><img src="http://res.51so.info/FnzLUdTR8ta3Jp-OkY73ejqSAg1J" alt="Microservices Depend on Each Other"></p>
+<p>没有容错逻辑的互相依赖的服务会导致联带故障。</p>
+<h2 id="变动管理"><a href="#变动管理" class="headerlink" title="变动管理"></a>变动管理</h2><p><strong>Goodle 的站点可靠性团队发现线上系统大概70%的故障是变动引起。当对服务改动 - 发布新版或者修改配置 - 总是可能导致故障或者引入新的 bug。</strong></p>
+<blockquote>
+<p>微服务架构下，服务互相依赖。因此我们需要把异常和负面效果最小化。对于改动引起的问题，可以实现改动管理策略和自动回滚。</p>
+</blockquote>
+<p><strong>比如当你部署了新的代码，或者改变了配置，应该灰度发布，监控这些发布并在关键指标上检测到异常时自动回滚。</strong><br><img src="http://res.51so.info/FqWtpVjblRawjLr6JuhfVNTsblms" alt="Microservices Change Management"></p>
+<p>变动管理 - 平滑部署</p>
+<blockquote>
+<p>另一种方案是同时允许两套生产环境。每次只发布到其中一套环境，并在验证新版本按预期工作后让负载均衡指向新环境。这种方案称为蓝-绿，或者红-黑部署。<br> 回滚代码并不意味糟糕。我们不应该让错误代码跑在线上然后思考哪里出了错。一旦有需要就回滚代码。越快越好。</p>
+</blockquote>
+<h3 id="健康检查和负载均衡"><a href="#健康检查和负载均衡" class="headerlink" title="健康检查和负载均衡"></a>健康检查和负载均衡</h3><blockquote>
+<p>实例因为异常，部署或者弹性伸缩。导致服务间隔或永久不可用。为了避免这种情况，负载均衡应该能从路由中过滤不健康的实例。</p>
+<p>应用实例的健康状态应该能从外部观测判断。可以通过不停发送<code>GET /health</code>请求或者主动报告实现。当前的服务发现方案能持续收集健康状态并配置负载均衡把流量导到健康的实例。</p>
+</blockquote>
+<h3 id="自我修复"><a href="#自我修复" class="headerlink" title="自我修复"></a>自我修复</h3><blockquote>
+<p>自我修复能够帮助恢复应用。自我修复指的是应用可以采取必要措施从异常中恢复。大多数情况下是通过外部系统检测到异常状态并过一段时候后进行处理。自我修复通常很有用，但是某些情况下导致不停重启也会引起问题。比如应用因为过载或者数据库连接超时导致无法获取健康状态时就会发生。</p>
+<p>针对特定场景实现高级的自我修复方案会很复杂 - 比如数据库连接丢失 -。这种情况需要额外的逻辑处理边界情况并让外部系统知道实例不需要立即重启。</p>
+</blockquote>
+<h2 id="故障备用缓存（Failover-Caching）"><a href="#故障备用缓存（Failover-Caching）" class="headerlink" title="故障备用缓存（Failover Caching）"></a>故障备用缓存（Failover Caching）</h2><blockquote>
+<p>服务通常因为网络事故或者系统变动导致故障。但是在大部分这样的中断中，可以通过自我修复或者高级的负载均衡方案让服务能继续工作。这时候故障备用缓存（Failover Caching）能为应用提供必要的数据。</p>
+</blockquote>
+<p><strong>故障备用缓存（Failover Caching）通常使用两个过期时间；较短的时间用于正常情况，较长的时间当异常情况发生时起作用。</strong></p>
+<p><img src="http://res.51so.info/Fio89XKxSyryekVrkAMiVo2mUuor" alt="Microservices Failover Caching"></p>
+<p>故障备用缓存（Failover Caching）</p>
+<p><strong>需要强调一点是故障备用缓存的使用条件是使用过期数据总比没有强。</strong></p>
+<blockquote>
+<p>设置缓存和故障备用缓存，可以通过标准的 HTTP 头实现。<br>比如，用<code>max-age</code>头设置资源的有效时间。用<code>stale-if-error</code>头决定在异常情况下让资源继续生效的时间。<br>当前 CDNs 和负载均衡器提供不同的缓存和故障转移行为，你也可以实现一套标准可靠的方案并在公司内分享。</p>
+</blockquote>
+<h2 id="重试逻辑"><a href="#重试逻辑" class="headerlink" title="重试逻辑"></a>重试逻辑</h2><p>某些情况我们无法缓存数据或需要对数据进行修改，导致操作最终失败。这些情况可以通过重试操作并期望资源不久后会恢复或者负载均衡器把请求转发到正常的实例。</p>
+<p>需要谨慎考虑是否在应用层和客户端加入重试逻辑，有一大部分重试导致更坏的后果甚至阻止应用恢复。</p>
+<p><strong>分布式系统中的微服务重试会触发多个请求或重试并导致级联效应。为了最小化重试影响，需要限制数量并使用一种指数补偿算法不断增加触发间隔直到达到最大重试限制。</strong></p>
+<p>当客户端发起重试 （浏览器，其它微服务等）并且不知道之前的操作或之后的响应是否失败，应用需要支持幂等操作。比如当你重试购买操作，不应该对客户重复收费。每个事务对应一个唯一幂等钥可以解决重试问题。</p>
+<h2 id="速率限制器和卸载器（Rate-Limiters-and-Load-Shedders）"><a href="#速率限制器和卸载器（Rate-Limiters-and-Load-Shedders）" class="headerlink" title="速率限制器和卸载器（Rate Limiters and Load Shedders）"></a>速率限制器和卸载器（Rate Limiters and Load Shedders）</h2><p>速率限制是在一段时间内定义指定客户或应用程序可以接收或处理请求数的技术。通过速率限制，你可以过滤掉产生流量峰值的客户和微服务，或者你可以确保应用程序在弹性伸缩起作用前不会超载。</p>
+<p>你还可以减少低优先级请求的响应，为关键事务让出资源。</p>
+<p><img src="http://res.51so.info/Fsdr6D9Gjjv1tGhr_Yzfb7SSOeUJ" alt="Microservices Rate Limiter"></p>
+<p>速率限制器可以拉低流量峰值</p>
+<p>并发请求限制器（concurrent request limiter）是另一种速率限制器。当你不希望重要的端点被调用超过指定的次数，但仍然想要提供服务时会非常有用。</p>
+<blockquote>
+<p>卸载器一个简单应用可以确保总是有足够的资源提供给关键的事务。它为高优先级请求保留一些资源，防止低优先级的事务占用所有资源。卸载器根据系统的整体状态做出决定，而不是基于单个用户请求的大小。卸载器有助于系统恢复，它保证发生意外时核心功能的正常工作。</p>
+</blockquote>
+<p>更多关于速率限制器和卸载切，我推荐这篇文章  <a href="https://stripe.com/blog/rate-limiters" target="_blank" rel="noopener">Stripe’sarticle</a></p>
+<h2 id="快速独立地失败"><a href="#快速独立地失败" class="headerlink" title="快速独立地失败"></a>快速独立地失败</h2><p>在微服务体系架构中，我们希望服务可以快速，独立地失败。在服务层面隔离故障，我们可以使用隔板模式（bulkhead pattern）。此文之后会介绍到舱壁模式。</p>
+<p>我们也希望组件能够快速失败来避免等待一个坏掉的实例直到超时。没有什么比挂起的请求和无响应 UI 更令人失望。这不仅浪费资源，还会让用户体验变差。我们的服务在一个链里互相调用，任何的延迟会被累加放大，所以应该额外注意并防止挂起操作的发生。</p>
+<p>第一个想法也许是对不同服务调用都采用细粒度超时。这种做法的问题是，你不能真正知道多长时间才是那个恰好的超时值，因为网络故障和其他问题发生的某些情况只会影响一两次操作。在这种情况下，你可能不想因为只有一些超时就拒绝这些请求。</p>
+<p><strong>我们可以说，对微服务中快速失败范式的实现中，使用超时是一种反模式，你应该避免使用。更好的选择可以采用根据操作的成功 / 失败统计的断路器模式。</strong></p>
+<h3 id="舱壁模式"><a href="#舱壁模式" class="headerlink" title="舱壁模式"></a>舱壁模式</h3><p>舱壁在工业中用于把船分区，这样在船身有缺口时可以封闭相应的区域。</p>
+<p>舱壁的概念也可以在软件开发中应用于隔离资源。</p>
+<blockquote>
+<p>通过使用舱壁模式，我们可以保护有限的资源不被用尽。例如，假定有两种操作与一个只能提供有限连接数的数据库通讯，可以使用两个连接池而不是单个共享的连接池。这样客户端就实现了-资源分离，一种操作超时或过度使用池不会导致另一种操作失败。</p>
+</blockquote>
+<p>泰坦尼克号沉没的主要原因之一是其舱壁设计失败，水可以通过上面的甲板没过舱壁的顶部，并淹没整个船体。</p>
+<p><img src="http://res.51so.info/FoYICwQsfpv_-cmvWgOHFuVohXTw" alt="Titanic Microservices Bulkheads"></p>
+<p>泰坦尼克号的舱壁（设计失败）</p>
+<h3 id="断路器（Circuit-Breakers）"><a href="#断路器（Circuit-Breakers）" class="headerlink" title="断路器（Circuit Breakers）"></a>断路器（Circuit Breakers）</h3><p>我们可以使用超时限制操作的持续时间。超时可以防止操作挂起并保证系统可以响应。然而，在微服务通信中使用静态，细调的超时是一种反模式，因为高度动态的环境几乎不可能确定适用所有情况超时时间限制。</p>
+<p>既然不能使用小的和事务相关的的静态超时，我们可以使用断路器来处理错误。断路器以现实世界的电子元件命名，因为它们的行为是相同的。你可以使用断路器保护资源并帮助恢复资源。断路器在分布式系统中非常有用，因为重复的故障可能引起雪球效应并使整个系统停服。</p>
+<p>当短时间内指定类型的错误多次发生，断路器会开启。开启的断路器可以拒绝接下来的请求-像防止电子流动一样。断路器通常在一定时间后关闭，为底层服务恢复提供足够空间。</p>
+<p>请记住，并不是所有的错误都应该触发断路器。例如，你可能希望忽略客户端<code>4xx</code>响应代码但包含<code>5xx</code>的服务端异常。一些断路器还可以有半开状态。在这种状态下，服务发送第一个请求来检查系统可用性，同时让其他请求失败。如果这个第一个请求成功，就将断路器恢复到关闭状态允许流量进入。否则保持打开。否则保持打开。</p>
+<p><img src="http://res.51so.info/Frm4XDSXlmo0Da4kv7GVYvwPfLvp" alt="Microservices Circuit Breakers"></p>
+<p>断路器</p>
+<h2 id="针对故障的测试"><a href="#针对故障的测试" class="headerlink" title="针对故障的测试"></a>针对故障的测试</h2><p>应该持续地测试系统的常见问题以确保服务可以在各种故障中的存活。经常测试故障让你的团队熟悉事故处理流程。</p>
+<p>针对测试，可以使用外部服务识别出各个实例组，并随机终止某个组中的一个实例。这是针对单个实例的故障准备，你甚至可以关闭整个区域来模拟云提供商层面的程序中断。</p>
+<p>最流行的测试解决方案之一是 Netflix 的<a href="https://github.com/Netflix/chaosmonkey" target="_blank" rel="noopener">ChaosMonkey</a>。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p><strong>实现并维护一套可靠的服务并不容易。你需要付出很多努力并花费公司更多的成本。</strong></p>
+<blockquote>
+<p>可靠性有很多层次和方面，找到最适合团队的解决方案很重要。你应该使可靠性成为业务决策流程中的一个要素，并为其分配足够的预算和时间。</p>
+</blockquote>
+<h3 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a>关键点</h3><ul>
+<li><p>动态环境和分布式系统（如微服务）有更高的概率发生故障。</p>
 </li>
-<li><p><code>queue()</code>—— 返回<code>Future</code>对象，通过该对象异步得到返回结果</p>
+<li><p>服务应单独失败以实现优雅降级，提升用户体验。</p>
 </li>
-<li><p><code>observe()</code>—— 返回<code>Observable</code>对象，立即发出请求，在依赖服务响应（或者抛出异常/超时）时，通过注册的<code>Subscriber</code>得到返回结果</p>
+<li><p>70％的问题是由变化引起的，恢复代码不是坏事。</p>
 </li>
-<li><p><code>toObservable()</code>—— 返回<code>Observable</code>对象，但只有在订阅该对象时，才会发出请求，然后在依赖服务响应（或者抛出异常/超时）时，通过注册的<code>Subscriber</code>得到返回结果</p>
+<li><p>快速，独立地失败。团队无法控制其服务依赖关系。</p>
 </li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">K             value   = command.execute();</span><br><span class="line">Future&lt;K&gt;     fValue  = command.queue();</span><br><span class="line">Observable&lt;K&gt; ohValue = command.observe();         <span class="comment">// hot observable（注：调用observe()方法时，请求立即发出）</span></span><br><span class="line">Observable&lt;K&gt; ocValue = command.toObservable();    <span class="comment">// cold observable（注：只有在返回的ocValue上调用subscribe时，才会发出请求）</span></span><br></pre></td></tr></table></figure>
-<p>在内部实现中，<code>execute()</code>是同步调用，内部会调用<code>queue().get()</code>方法。<code>queue()</code>内部会调用<code>toObservable().toBlocking().toFuture()</code>。也就是说，<code>HystrixCommand</code>内部均通过一个<code>Observable</code>的实现来执行请求，即使这些命令本来是用来执行同步返回回应这样的简单逻辑。</p>
-<h3 id="3-结果是否有缓存"><a href="#3-结果是否有缓存" class="headerlink" title="3. 结果是否有缓存"></a>3. 结果是否有缓存</h3><p>如果请求结果缓存这个特性被启用，并且缓存命中，则缓存的回应会立即通过一个<code>Observable</code>对象的形式返回。</p>
-<h3 id="4-请求线路是否是开路"><a href="#4-请求线路是否是开路" class="headerlink" title="4. 请求线路是否是开路"></a>4. 请求线路是否是开路</h3><p>当执行一个命令时，Hystrix 会先检查熔断器状态，确定请求线路是否是开路</p>
-<p>如果请求线路是开路，Hystrix 将不会执行这个命令，而是直接使用『失败回退逻辑』</p>
-<h3 id="5-线程池-请求队列-信号量占满时会发生什么"><a href="#5-线程池-请求队列-信号量占满时会发生什么" class="headerlink" title="5. 线程池/请求队列/信号量占满时会发生什么"></a>5. 线程池/请求队列/信号量占满时会发生什么</h3><p>如果和当前需要执行的命令相关联的线程池和请求队列（或者信号量，如果不使用线程池），Hystrix 将不会执行这个命令，而是直接使用『失败回退逻辑』</p>
-<h3 id="6-使用HystrixObservableCommand-construct-还是HystrixCommand-run"><a href="#6-使用HystrixObservableCommand-construct-还是HystrixCommand-run" class="headerlink" title="6. 使用HystrixObservableCommand.construct()还是HystrixCommand.run()"></a>6. 使用<code>HystrixObservableCommand.construct()</code>还是<code>HystrixCommand.run()</code></h3><p>Hystrix 将根据你使用类的不同，内部使用不同的方式来请求依赖服务：</p>
-<ul>
-<li><p><code>HystrixCommand.run()</code>—— 返回回应或者抛出异常</p>
-</li>
-<li><p><code>HystrixObservableCommand.construct()</code>—— 返回 Observable 对象，并在回应到达时通知 observers，或者回调<code>onError</code>方法通知出现异常</p>
-</li>
-</ul>
-<p>若<code>run()</code>或者<code>construct()</code>方法耗时超过了给命令设置的超时阈值，执行请求的线程将抛出<code>TimeoutException</code>（若命令本身并不在其调用线程内执行，则单独的定时器线程会抛出该异常）。在这种情况下，Hystrix 将会执行失败回退逻辑，并且会忽略最终（若执行命令的线程没有被中断）返回的回应。</p>
-<p>若命令本身并不抛出异常，并正常返回回应，Hystrix 在添加一些日志和监控数据采集之后，直接返回回应。Hystrix 在使用<code>run()</code>方法时，Hystrix 内部还是会生成一个<code>Observable</code>对象，并返回单个请求，产生一个<code>onCompleted</code>通知；而在 Hystrix 使用<code>construct()</code>时，会直接返回由<code>construct()</code>产生的<code>Observable</code>对象</p>
-<h3 id="7-计算线路健康度"><a href="#7-计算线路健康度" class="headerlink" title="7. 计算线路健康度"></a>7. 计算线路健康度</h3><p>Hystrix 会将请求成功，失败，被拒绝或超时信息报告给熔断器，熔断器维护一些用于统计数据用的计数器。</p>
-<p>这些计数器产生的统计数据使得熔断器在特定的时刻，能短路某个依赖服务的后续请求，直到恢复期结束，若恢复期结束根据统计数据熔断器判定线路仍然未恢复健康，熔断器会再次关闭线路。</p>
-<h3 id="8-失败回退逻辑"><a href="#8-失败回退逻辑" class="headerlink" title="8. 失败回退逻辑"></a>8. 失败回退逻辑</h3><p>当命令执行失败时，Hystrix 将会执行失败回退逻辑，失败原因可能是：</p>
-<ul>
-<li><code>construct()</code>或<code>run()</code>方法抛出异常</li>
-<li>当线路是开路，导致命令被短路时</li>
-<li>当命令对应的线程池或信号量被占满</li>
-<li>超时</li>
-</ul>
-<p>失败回退逻辑包含了通用的回应信息，这些回应从内存缓存中或者其他固定逻辑中得到，而不应有任何的网络依赖。如果一定要在失败回退逻辑中包含网络请求，必须将这些网络请求包装在另一个<code>HystrixCommand</code>或<code>HystrixObservableCommand</code>中。</p>
-<p>当使用<code>HystrixCommand</code>时，通过实现<code>HystrixCommand.getFallback()</code>返回失败回退时的回应。</p>
-<p>当使用<code>HystrixObservableCommand</code>时，通过实现<code>HystrixObservableCommand.resumeWithFallback()</code>返回 Observable 对象来通知 observers 失败回退时的回应。</p>
-<p>若失败回退方法返回回应，Hystrix 会将这个回应返回给命令的调用者。若 Hystrix 内部调用<code>HystrixCommand.getFallback()</code>时，会产生一个 Observable 对象，并包装用户实现的<code>getFallback()</code>方法返回的回应；若 Hystrix 内部调用<code>HystrixObservableCommand.resumeWithFallback()</code>时，会将用户实现的<code>resumeWithFallback()</code>返回的 Observable 对象直接返回。</p>
-<p>若你没有实现失败回退方法，或者失败回退方法抛出异常，Hystrix 内部还是会生成一个 Observable 对象，但它不会产生任何回应，并通过<code>onError</code>通知立即中止请求。Hystrix 默认会通过<code>onError</code>通知调用者发生了何种异常。你需要尽量避免失败回退方法执行失败，保持该方法尽可能的简单不易出错。</p>
-<p>若失败回退方法执行失败，或者用户未提供失败回退方法，Hystrix 会根据调用执行命令的方法的不同而产生不同的行为：</p>
-<ul>
-<li><p><code>execute()</code>—— 抛出异常</p>
-</li>
-<li><p><code>queue()</code>—— 成功返回<code>Future</code>对象，但其<code>get()</code>方法被调用时，会抛出异常</p>
-</li>
-<li><p><code>observe()</code>—— 返回<code>Observable</code>对象，当你订阅它的时候，会立即调用 subscriber 的<code>onError</code>方法中止请求</p>
-</li>
-<li><p><code>toObservable()</code>—— 返回<code>Observable</code>对象，当你订阅它的时候，会立即调用 subscriber 的<code>onError</code>方法中止请求</p>
-</li>
-</ul>
-<h3 id="9-返回正常回应"><a href="#9-返回正常回应" class="headerlink" title="9. 返回正常回应"></a>9. 返回正常回应</h3><p>若命令成功被执行，Hystrix 将回应返回给调用方，或者通过<code>Observable</code>的形式返回。根据上述调用命令方式的不同（如第2条所示），<code>Observable</code>对象会进行一些转换：</p>
-<p><img src="http://res.51so.info/FixdLsg7cw9nkJIBPoCFoQMmc63r" alt="Observable对象的转化"></p>
-<ul>
-<li><p><code>execute()</code>—— 产生一个<code>Future</code>对象，行为同<code>.queue()</code>产生的<code>Future</code>对象一样，接着调用其<code>get()</code>方法，生成由内部产生的<code>Observable</code>对象返回的回应</p>
-</li>
-<li><p><code>queue()</code>—— 将内部产生的<code>Observable</code>对象转换（Decorator模式）成<code>BlockingObservable</code>对象，以产生并返回<code>Future</code>对象</p>
-</li>
-<li><p><code>observe()</code>—— 产生<code>Observable</code>对象后，立即订阅（ReplaySubject）以使命令得以执行（异步），返回该<code>Observable</code>对象，当你调用其<code>subscribe</code>方法时，重放产生的回应信息和通知给用户提供的订阅者</p>
-</li>
-<li><p><code>toObservable()</code>—— 返回<code>Observable</code>对象，你必须调用其<code>subscribe</code>方法，以使命令得以执行。</p>
-</li>
-</ul>
-<h2 id="熔断器"><a href="#熔断器" class="headerlink" title="熔断器"></a>熔断器</h2><p>下图展示了<code>HystrixCommand</code>或<code>HystrixObservableCommand</code>如何与<code>HystrixCircuitBreaker</code>进行交互，以及<code>HystrixCircuitBreaker</code>的决策逻辑流程，包括熔断器内部计数器如何工作。</p>
-<p><img src="http://res.51so.info/Fscwhpss2b-WqmRMCiiHDLXsehJe" alt="熔断器执行逻辑"></p>
-<p>线路的开路闭路详细逻辑如下：</p>
-<ul>
-<li>1.假设线路内的容量（请求QPS）达到一定阈值（通过<code>HystrixCommandProperties.circuitBreakerRequestVolumeThreshold()</code>配置）</li>
-<li>2.同时，假设线路内的错误率达到一定阈值（通过<code>HystrixCommandProperties.circuitBreakerErrorThresholdPercentage()</code>配置）</li>
-<li>3.熔断器将从『闭路』转换成『开路』</li>
-<li>4.若此时是『开路』状态，熔断器将短路后续所有经过该熔断器的请求，这些请求直接走『失败回退逻辑』</li>
-<li>5.经过一定时间（即『休眠窗口』，通过<code>HystrixCommandProperties.circuitBreakerSleepWindowInMilliseconds()</code>配置），后续第一个请求将会被允许通过熔断器（此时熔断器处于『半开』状态），若该请求失败，熔断器将又进入『开路』状态，且在休眠窗口内保持此状态；若该请求成功，熔断器将进入『闭路』状态，回到逻辑1循环往复。</li>
-</ul>
-<h2 id="依赖隔离"><a href="#依赖隔离" class="headerlink" title="依赖隔离"></a>依赖隔离</h2><p>Hystrix 通过使用『舱壁模式』（注：将船的底部划分成一个个的舱室，这样一个舱室进水不会导致整艘船沉没。将系统所有依赖服务隔离起来，一个依赖延迟升高或者失败，不会导致整个系统失败）来隔离依赖服务，并限制访问这些依赖服务的并发度。</p>
-<p><img src="http://res.51so.info/Fk9A7TNh9lLAGdmla04_mQ9SEbJs" alt="依赖隔离"></p>
-<h3 id="线程-amp-线程池"><a href="#线程-amp-线程池" class="headerlink" title="线程&amp;线程池"></a>线程&amp;线程池</h3><p>通过将对依赖服务的访问执行放到单独的线程，将其与调用线程（例如 Tomcat 线程池中的线程）隔离开来，调用线程能空出来去做其他的工作而不至于被依赖服务的访问阻塞过长时间。</p>
-<p>Hystrix 使用独立的，每个依赖服务对应一个线程池的方式，来隔离这些依赖服务，这样，某个依赖服务的高延迟只会拖慢这个依赖服务对应的线程池。</p>
-<p><img src="http://res.51so.info/FngxE8Apqv10SaF8FVWSKJqfdyrI" alt="高延迟请求的例子"></p>
-<p>当然，也可以不使用线程池来使你的系统免受依赖服务失效的影响，这需要你小心的设置网络连接/读取超时时间和重试配置，并保证这些配置能正确正常的运作，以使这些依赖服务在失效时，能快速返回错误。</p>
-<p>Netflix 在设计 Hystrix 时，使用线程/线程池来实现隔离，原因如下：</p>
-<ul>
-<li><p>多数系统同时运行了（有时甚至多达数百个）不同的后端服务，这些服务由不同开发组开发。</p>
-</li>
-<li><p>每个服务都提供了自己的客户端库</p>
-</li>
-<li><p>客户端库经常会发生变动</p>
-</li>
-<li><p>客户端库可能会改变逻辑，加入新的网络请求</p>
-</li>
-<li><p>客户端库可能会包含重试逻辑，数据解析，缓存（本地缓存或分布式缓存），或者其他类似逻辑</p>
-</li>
-<li><p>客户端库对于使用者来说，相当于『黑盒』，其实现细节，网络访问方式，默认配置等等均对使用者透明</p>
-</li>
-<li><p>In several real-world production outages the determination was “oh, something changed and properties should be adjusted” or “the client library changed its behavior.”</p>
-</li>
-<li><p>即使客户端库本身未发生变化，服务自身发生变化，也可能会影响其性能，从而导致客户端配置不再可靠</p>
-</li>
-<li><p>中间依赖服务可能包含一些其依赖服务提供的客户端库，而这些库可能不受控且配置不合理</p>
-</li>
-<li><p>绝大多数网络访问都采用同步的方式进行</p>
-</li>
-<li><p>客户端代码可能也会有失效或者高延迟，而不仅仅是在网络访问时</p>
+<li><p>架构模式和技术，如缓存，舱壁，断路器和限速器有助于构建可靠的微服务。</p>
 </li>
 </ul>
-<p><img src="http://res.51so.info/FsEeS4yOeN6ueARtRrjisz3lpYi2" alt="面对失效时 Hystrix 包装的请求拓扑图"></p>
-<h5 id="线程池的优势"><a href="#线程池的优势" class="headerlink" title="线程池的优势"></a>线程池的优势</h5><p>将依赖服务请求通过使用不同的线程池隔离，其优势如下：</p>
-<ul>
-<li><p>系统完全与依赖服务请求隔离开来，即使依赖服务对应线程池耗尽，也不会影响系统其它请求</p>
-</li>
-<li><p>降低了系统接入新的依赖服务的风险，若新的依赖服务存在问题，也不会影响系统其它请求</p>
-</li>
-<li><p>当依赖服务失效后又恢复正常，其对应的线程池会被清理干净，相对于整个 Tomcat 容器的线程池被占满需要耗费更长时间以恢复可用来说，此时系统可以快速恢复</p>
-</li>
-<li><p>若依赖服务的配置有问题，线程池能迅速反映出来（通过失败次数的增加，高延迟，超时，拒绝访问等等），同时，你可以在不影响系统现有功能的情况下，处理这些问题（通常通过热配置等方式）</p>
-</li>
-<li><p>若依赖服务的实现发生变更，性能有了很大的变化（这种情况时常发生），需要进行配置调整（例如增加/减小超时阈值，调整重试策略等）时，也可以从线程池的监控信息上迅速反映出来（失败次数增加，高延迟，超时，拒绝访问等等），同时，你可以在不影响其他依赖服务，系统请求和用户的情况下，处理这些问题</p>
-</li>
-<li><p>线程池处理能起到隔离的作用以外，还能通过这种内置的并发特性，在客户端库同步网络IO上，建立一个异步的 Facade（类似 Netflix API 建立在 Hystrix 命令上的 Reactive、全异步化的那一套 Java API）</p>
-</li>
-</ul>
-<p>简而言之，通过线程池提供的依赖服务隔离，可以使得我们能在不停止服务的情况下，更加优雅地应对客户端库和子系统性能上的变化。</p>
-<p>注：尽管线程池能提供隔离性，但你仍然需要对你的依赖服务客户端代码增加超时逻辑，并且/或者处理线程中断异常，以使这些代码不会无故地阻塞或者拖慢 Hystrix 线程池。</p>
-<h5 id="线程池的弊端"><a href="#线程池的弊端" class="headerlink" title="线程池的弊端"></a>线程池的弊端</h5><p>使用线程池的主要弊端是会增加系统 CPU 的负载，每个命令的执行，都包含了 CPU 任务的排队，调度，上下文切换。</p>
-<p>Netflix 在设计 Hystrix 时，认为相对于其带来的好处，其带来的负载的一点点升高对系统的影响是微乎其微的。</p>
-<h5 id="线程池的开销"><a href="#线程池的开销" class="headerlink" title="线程池的开销"></a>线程池的开销</h5><p>Hystrix 的开发人员测试了在子线程中执行<code>construct()</code>或<code>run()</code>方法带来的额外时延，以及在父线程中整个请求的耗时，通过这个测试，你能直观了解 Hystrix 使用线程池带来的一点点系统负载的升高影响（线程，监控，日志，熔断器等）。</p>
-<p>Netflix API 使用线程池来隔离依赖服务，每天可以处理超过 100 亿的 Hystrix 命令，每个 API 实例有超过 40 个线程池，每个线程池有 5 到 20 个工作线程（绝大部分设置为 10 个线程）。</p>
-<p>下图展示了一个<code>HystrixCommand</code>以 60QPS 的速度，在一个 API 实例（每台服务器每秒运行的线程数峰值为 350）上被执行的耗时监控：</p>
-<p><img src="http://res.51so.info/FvnKC_5AUQ2Vqq9wd5jk8CXamZsb" alt="线程池开销"></p>
-<p>（注：有 User 的表示使用线程池来隔离依赖服务后的耗时）</p>
-<p>中位数显示二者（未使用线程池和使用线程池）没有差别。</p>
-<p>90% 的情况下，使用线程池有 3ms 的延迟</p>
-<p>99% 的情况下，使用线程池有 9ms 的延迟，尽管如此，相对于请求的总时间（2ms~28ms），延迟（0ms~9ms）基本可以忽略不计</p>
-<p>90% 的情况下，这些延迟和在使用了熔断器之后更高的延迟，在绝大多数 Netflix 的需求来看，是微不足道的，更何况其能带来系统稳定性和鲁棒性上的巨大提升。</p>
-<p>对于那些本来延迟就比较小的请求（例如访问本地缓存成功率很高的请求）来说，线程池带来的开销是非常高的，这时，你可以考虑采用其他方法，例如非阻塞信号量（不支持超时），来实现依赖服务的隔离，使用信号量的开销很小。但绝大多数情况下，Netflix 更偏向于使用线程池来隔离依赖服务，因为其带来的额外开销可以接受，并且能支持包括超时在内的所有功能。</p>
-<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>除了线程池，队列之外，你可以使用信号量（或者叫计数器）来限制单个依赖服务的并发度。Hystrix 可以利用信号量，而不是线程池，来控制系统负载，但信号量不允许我们设置超时和异步化，如果你对客户端库有足够的信任（延迟不会过高），并且你只需要控制系统负载，那么你可以使用信号量。</p>
-<p><code>HystrixCommand</code>和<code>HystrixObservableCommand</code>在两个地方支持使用信号量：</p>
-<ul>
-<li><p>失败回退逻辑：当 Hystrix 需要执行失败回退逻辑时，其在调用线程（Tomcat 线程）中使用信号量</p>
-</li>
-<li><p>执行命令时：如果设置了 Hystrix 命令的<code>execution.isolation.strategy</code>属性为<code>SEMAPHORE</code>，则 Hystrix 会使用信号量而不是线程池来控制调用线程调用依赖服务的并发度</p>
-</li>
-</ul>
-<p>你可以通过动态配置（即热部署）来决定信号量的大小，以控制并发线程的数量，信号量大小的估计和使用线程池进行并发度估计一样（仅访问内存数据的请求，一般能达到耗时在 1ms 以内，且能达到 5000rps，这样的请求对应的信号量可以设置为 1 或者 2。默认值为 10）。</p>
-<p>注意：如果依赖服务使用信号量来进行隔离，当依赖服务出现高延迟，其调用线程也会被阻塞，直到依赖服务的网络请求超时。</p>
-<p>信号量在达到上限时，会拒绝后续请求的访问，同时，设置信号量的线程也无法异步化（即像线程池那样，实现『提交-做其他工作-得到结果』模式）</p>
-<h2 id="请求合并"><a href="#请求合并" class="headerlink" title="请求合并"></a>请求合并</h2><p>你可以在<code>HystrixCommand</code>之前放置一个『请求合并器』（<code>HystrixCollapser</code>为请求合并器的抽象父类），该合并器可以将多个发往同一个后端依赖服务的请求合并成一个。</p>
-<p>下图展示了在两种场景（未增加『请求合并器』和增加『请求合并器』）下，线程和网络连接数量（假设所有请求在一个很小的时间窗口内，例如 10ms，是『并发』的）：</p>
-<p><img src="http://res.51so.info/FuI8s28gdskI-RzRiCF6YQ__Hd1B" alt="请求合并"></p>
-<h3 id="为什么要使用请求合并？"><a href="#为什么要使用请求合并？" class="headerlink" title="为什么要使用请求合并？"></a>为什么要使用请求合并？</h3><p>在并发执行<code>HystrixCommand</code>时，利用请求合并能减少线程和网络连接数量。通过使用<code>HystrixCollapser</code>，Hystrix 能自动完成请求的合并，开发者不需要对现有代码做批量化的开发。</p>
-<h5 id="全局上下文（适用于所有-Tomcat-线程）"><a href="#全局上下文（适用于所有-Tomcat-线程）" class="headerlink" title="全局上下文（适用于所有 Tomcat 线程）"></a>全局上下文（适用于所有 Tomcat 线程）</h5><p>理想情况下，合并过程应该发生在系统全局层面，这样用户发起的，由 Tomcat 线程执行的所有请求都能被执行合并操作。</p>
-<p>例如，有这样一个需求，用户需要获取电影评级，而这些数据需要系统请求依赖服务来获取，对依赖服务的请求使用<code>HystrixCommand</code>进行包装，并增加了请求合并的配置，这样，当同一个 JVM 中其他线程需要执行同样的请求时，Hystrix 会将这个请求同其他同样的请求合并，只产生一个网络请求。</p>
-<p>注意：合并器会传递一个<code>HystrixRequestContext</code>对象到合并的网络请求中，因此，下游系统需要支持批量化，以使请求合并发挥其高效的特点。</p>
-<h5 id="用户请求上下文（适用于单个-Tomcat-线程）"><a href="#用户请求上下文（适用于单个-Tomcat-线程）" class="headerlink" title="用户请求上下文（适用于单个 Tomcat 线程）"></a>用户请求上下文（适用于单个 Tomcat 线程）</h5><p>如果给<code>HystrixCommand</code>只配置成针对单个用户进行请求合并，则 Hystrix 只会在单个 Tomcat 线程（即请求）中进行请求合并。</p>
-<p>例如，如果用户想加载 300 个视频对象的书签，请求合并后，Hystrix 会将原本需要发起的 300 个网络请求合并到一个。</p>
-<h5 id="对象模型和代码复杂度"><a href="#对象模型和代码复杂度" class="headerlink" title="对象模型和代码复杂度"></a>对象模型和代码复杂度</h5><p>很多时候，当你创建一个对象模型，适用于对象的消费者逻辑，结果发现这个模型会导致生产者无法充分利用其拥有的资源。</p>
-<p>例如，这里有一个包含 300 个视频对象的列表，需要遍历这个列表，并对每一个对象调用<code>getSomeAttribute()</code>方法，这是一个显而易见的对象模型，但如果简单处理的话，可能会导致 300 次的网络请求（假设<code>getSomeAttribute()</code>方法内需要发出网络请求），每一个网络请求可能都会花上几毫秒（显然，这种方式非常容易拖慢系统）。</p>
-<p>当然，你也可以要求用户在调用<code>getSomeAttribute()</code>之前，先判断一下哪些视频对象真正需要请求其属性。</p>
-<p>或者，你可以将对象模型进行拆分，从一个地方获取视频列表，然后从另一个地方获取视频的属性。</p>
-<p>但这些实现会导致 API 非常丑陋，且实现的对象模型无法完全满足用户使用模式。 并且在企业级开发时，很容易因为开发者的疏忽导致错误或者不够高效，因为不同的开发者可能有不同的请求方式，这样一个地方的优化不足以保证在所有地方都会有优化。</p>
-<p>通过将合并逻辑下沉到 Hystrix 层，不管你如何设计对象模型，或者以何种方式去调用依赖服务，又或者开发者是否意识到这些逻辑需要不需要进行优化，这些都不需要考虑，因为 Hystrix 能统一处理。</p>
-<p><code>getSomeAttribute()</code>方法能放在它最适合的位置，并且能以最适合的方式被调用，Hystrix 的请求合并器会自动将请求合并到合并时间窗口内。</p>
-<h5 id="请求合并带来的额外开销"><a href="#请求合并带来的额外开销" class="headerlink" title="请求合并带来的额外开销"></a>请求合并带来的额外开销</h5><p>请求合并会导致依赖服务的请求延迟增高（该延迟为等待请求的延迟），延迟的最大值为合并时间窗口大小。</p>
-<p>若某个请求耗时的中位数是 5ms，合并时间窗口为 10ms，那么在最坏情况下（注：合并时间窗口开启时发起请求），请求需要消耗 15ms 才能完成。通常情况下，请求不太可能恰好在合并时间窗口开启时发起，因此，请求合并带来的额外开销应该是合并时间窗口的一般，在此例中是 5ms。</p>
-<p>请求合并带来的额外开销是否值得，取决于将要执行的命令，高延迟的命令相比较而言不会有太大的影响。同时，缓存 Key 的选择也决定了在一个合并时间窗口内能『并发』执行的命令数量：如果一个合并时间窗口内只有 1~2 个请求，将请求合并显然不是明智的选择。事实上，如果单线程循环调用同一个依赖服务的情况下，如果将请求合并，会导致这个循环成为系统性能的瓶颈，因为每一个请求都需要等待 10ms 的合并时间周期。</p>
-<p>然而，如果一个命令具有高并发度，并且能批量处理多个，甚至上百个的话，请求合并带来的性能开销会因为吞吐量的极大提升而基本可以忽略，因为 Hystrix 会减少这些请求所需的线程和网络连接数量。</p>
-<h5 id="请求合并器的执行流程"><a href="#请求合并器的执行流程" class="headerlink" title="请求合并器的执行流程"></a>请求合并器的执行流程</h5><p><img src="http://res.51so.info/FuJqSfHYZuCZXwLhGoxwkliH6jLo" alt="请求合并器的执行流程"></p>
-<h2 id="请求缓存"><a href="#请求缓存" class="headerlink" title="请求缓存"></a>请求缓存</h2><p>在<code>HystrixCommand</code>和<code>HystrixObservableCommand</code>的实现中，你可以定义一个缓存的 Key，这个 Key 用于在同一个请求上下文（全局或者用户级）中标识缓存的请求结果，当然，该缓存是线程安全的。</p>
-<p>下例展示了在一个完整 HTTP 请求周期内，两个线程执行命令的流程：</p>
-<p><img src="http://res.51so.info/FpfiNvAaDnpwKPq2AQNBJZkkkVGU" alt="请求缓存例子"></p>
-<p>请求缓存有如下好处：</p>
-<ul>
-<li>不同请求路径上针对同一个依赖服务进行的重复请求（有同一个缓存 Key），不会真实请求多次</li>
-</ul>
-<p>这个特性在企业级系统中非常有用，在这些系统中，开发者往往开发的只是系统功能的一部分。（注：这样，开发者彼此隔离，不太可能使用同样的方法或者策略去请求同一个依赖服务提供的资源）</p>
-<p>例如，请求一个用户的<code>Account</code>的逻辑如下所示，这个逻辑往往在系统不同地方被用到：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Account account = <span class="keyword">new</span> UserGetAccount(accountId).execute();</span><br><span class="line"><span class="comment">//or</span></span><br><span class="line">Observable&lt;Account&gt; accountObservable = <span class="keyword">new</span> UserGetAccount(accountId).observe();</span><br></pre></td></tr></table></figure>
-<p>Hystrix 的<code>RequestCache</code>只会在内部执行<code>run()</code>方法一次，上面两个线程在执行<code>HystrixCommand</code>命令时，会得到相同的结果，即使这两个命令是两个不同的实例。</p>
-<ul>
-<li>数据获取具有一致性</li>
-</ul>
-<p>因为缓存的存在，除了第一次请求需要真正访问依赖服务以外，后续请求全部从缓存中获取，可以保证在同一个用户请求内，不会出现依赖服务返回不同的回应的情况。</p>
-<ul>
-<li>避免不必要的线程执行</li>
-</ul>
-<p>在<code>construct()</code>或<code>run()</code>方法执行之前，会先从请求缓存中获取数据，因此，Hystrix 能利用这个特性避免不必要的线程执行，减小系统开销。</p>
-<p>若 Hystrix 没有实现请求缓存，那么<code>HystrixCommand</code>和<code>HystrixObservableCommand</code>的实现者需要自己在<code>construct()</code>或<code>run()</code>方法中实现缓存，这种方式无法避免不必要的线程执行开销。</p>
+<blockquote>
+<p>原文：<a href="https://blog.risingstack.com/designing-microservices-architecture-for-failure/" target="_blank" rel="noopener">designing-microservices-architecture-for-failure</a></p>
+</blockquote>
 
       
 
@@ -455,7 +343,7 @@ var _hmt = _hmt || [];
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">hystrix</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">架构</a>
         		</li>
       		
 		</ul>
@@ -522,7 +410,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=https://kingschan1204.github.io/2017/12/29/2017-12-29-hystrix-execute-theory/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kingschan1204.github.io/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -536,18 +424,9 @@ var _hmt = _hmt || [];
   
 <nav id="article-nav">
   
-    <a href="/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          针对故障设计微服务架构
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/12/21/2017-12-21-eureka-ha-3node/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Eureka高可用3节点配置</div>
+    <a href="/2017/12/29/2017-12-29-hystrix-execute-theory/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">hystrix实现原理</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -574,7 +453,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#流程图"><span class="toc-number">1.</span> <span class="toc-text">流程图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-构建HystrixCommand或者HystrixObservableCommand对象"><span class="toc-number">1.1.</span> <span class="toc-text">1. 构建HystrixCommand或者HystrixObservableCommand对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-执行命令"><span class="toc-number">1.2.</span> <span class="toc-text">2. 执行命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-结果是否有缓存"><span class="toc-number">1.3.</span> <span class="toc-text">3. 结果是否有缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-请求线路是否是开路"><span class="toc-number">1.4.</span> <span class="toc-text">4. 请求线路是否是开路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-线程池-请求队列-信号量占满时会发生什么"><span class="toc-number">1.5.</span> <span class="toc-text">5. 线程池/请求队列/信号量占满时会发生什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-使用HystrixObservableCommand-construct-还是HystrixCommand-run"><span class="toc-number">1.6.</span> <span class="toc-text">6. 使用HystrixObservableCommand.construct()还是HystrixCommand.run()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-计算线路健康度"><span class="toc-number">1.7.</span> <span class="toc-text">7. 计算线路健康度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-失败回退逻辑"><span class="toc-number">1.8.</span> <span class="toc-text">8. 失败回退逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-返回正常回应"><span class="toc-number">1.9.</span> <span class="toc-text">9. 返回正常回应</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#熔断器"><span class="toc-number">2.</span> <span class="toc-text">熔断器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖隔离"><span class="toc-number">3.</span> <span class="toc-text">依赖隔离</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程-amp-线程池"><span class="toc-number">3.1.</span> <span class="toc-text">线程&amp;线程池</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#线程池的优势"><span class="toc-number">3.1.0.1.</span> <span class="toc-text">线程池的优势</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#线程池的弊端"><span class="toc-number">3.1.0.2.</span> <span class="toc-text">线程池的弊端</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#线程池的开销"><span class="toc-number">3.1.0.3.</span> <span class="toc-text">线程池的开销</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#信号量"><span class="toc-number">3.2.</span> <span class="toc-text">信号量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#请求合并"><span class="toc-number">4.</span> <span class="toc-text">请求合并</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要使用请求合并？"><span class="toc-number">4.1.</span> <span class="toc-text">为什么要使用请求合并？</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#全局上下文（适用于所有-Tomcat-线程）"><span class="toc-number">4.1.0.1.</span> <span class="toc-text">全局上下文（适用于所有 Tomcat 线程）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#用户请求上下文（适用于单个-Tomcat-线程）"><span class="toc-number">4.1.0.2.</span> <span class="toc-text">用户请求上下文（适用于单个 Tomcat 线程）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#对象模型和代码复杂度"><span class="toc-number">4.1.0.3.</span> <span class="toc-text">对象模型和代码复杂度</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#请求合并带来的额外开销"><span class="toc-number">4.1.0.4.</span> <span class="toc-text">请求合并带来的额外开销</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#请求合并器的执行流程"><span class="toc-number">4.1.0.5.</span> <span class="toc-text">请求合并器的执行流程</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#请求缓存"><span class="toc-number">5.</span> <span class="toc-text">请求缓存</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#微服务的风险"><span class="toc-number">1.</span> <span class="toc-text">微服务的风险</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务优雅降级"><span class="toc-number">2.</span> <span class="toc-text">服务优雅降级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变动管理"><span class="toc-number">3.</span> <span class="toc-text">变动管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#健康检查和负载均衡"><span class="toc-number">3.1.</span> <span class="toc-text">健康检查和负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自我修复"><span class="toc-number">3.2.</span> <span class="toc-text">自我修复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#故障备用缓存（Failover-Caching）"><span class="toc-number">4.</span> <span class="toc-text">故障备用缓存（Failover Caching）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重试逻辑"><span class="toc-number">5.</span> <span class="toc-text">重试逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#速率限制器和卸载器（Rate-Limiters-and-Load-Shedders）"><span class="toc-number">6.</span> <span class="toc-text">速率限制器和卸载器（Rate Limiters and Load Shedders）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速独立地失败"><span class="toc-number">7.</span> <span class="toc-text">快速独立地失败</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#舱壁模式"><span class="toc-number">7.1.</span> <span class="toc-text">舱壁模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断路器（Circuit-Breakers）"><span class="toc-number">7.2.</span> <span class="toc-text">断路器（Circuit Breakers）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#针对故障的测试"><span class="toc-number">8.</span> <span class="toc-text">针对故障的测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-number">9.</span> <span class="toc-text">最后</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键点"><span class="toc-number">9.1.</span> <span class="toc-text">关键点</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -590,7 +469,7 @@ var _hmt = _hmt || [];
   
 
   
-  <div id="SOHUCS" sid="2017-12-29-hystrix-execute-theory" ></div> 
+  <div id="SOHUCS" sid="2017-12-29-designing-microservices-architecture-for-failure" ></div> 
 <script charset="utf-8" type="text/javascript" src="//changyan.sohu.com/upload/changyan.js" ></script>
 <script type="text/javascript">
     window.changyan.api.config({
