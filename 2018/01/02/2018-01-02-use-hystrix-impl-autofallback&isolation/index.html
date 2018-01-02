@@ -6,19 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://kingschan1204.github.io">
-  <title>git与svn的区别 | kings.chan的博客</title>
+  <title>使用 Hystrix 实现自动降级与依赖隔离 | kings.chan的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="GIT不仅仅是个版本控制系统，它也是个内容管理系统(CMS),工作管理系统等。如果你是一个具有使用SVN背景的人，你需要做一定的思想转换，来适应GIT提供的一些概念和特征。所以，这篇文章的主要目的就是通过介绍GIT能做什么、它和SVN在深层次上究竟有什么不同来帮助你认识它。  1.GIT是分布式的，SVN不是：这是GIT和其它非分布式的版本控制系统，例如SVN，CVS等，最核心的区别。如果你能理">
-<meta name="keywords" content="git">
+  <meta name="description" content="Hystrix说明官方文档 [https://github.com/Netflix/Hystrix/wiki]  hystrix是netflix开源的一个容灾框架，解决当外部依赖故障时拖垮业务系统、甚至引起雪崩的问题。  2.1为什么需要Hystrix?在大中型分布式系统中，通常系统很多依赖(HTTP,hession,Netty,Dubbo等)，在高并发访问下,这些依赖的稳定性与否对系统的影响非常">
+<meta name="keywords" content="spring cloud,hystrix">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git与svn的区别">
-<meta property="og:url" content="https://kingschan1204.github.io/2015/12/03/2015-12-03-git&svn-difference/index.html">
+<meta property="og:title" content="使用 Hystrix 实现自动降级与依赖隔离">
+<meta property="og:url" content="https://kingschan1204.github.io/2018/01/02/2018-01-02-use-hystrix-impl-autofallback&isolation/index.html">
 <meta property="og:site_name" content="kings.chan的博客">
-<meta property="og:description" content="GIT不仅仅是个版本控制系统，它也是个内容管理系统(CMS),工作管理系统等。如果你是一个具有使用SVN背景的人，你需要做一定的思想转换，来适应GIT提供的一些概念和特征。所以，这篇文章的主要目的就是通过介绍GIT能做什么、它和SVN在深层次上究竟有什么不同来帮助你认识它。  1.GIT是分布式的，SVN不是：这是GIT和其它非分布式的版本控制系统，例如SVN，CVS等，最核心的区别。如果你能理">
-<meta property="og:updated_time" content="2017-12-29T06:33:15.845Z">
+<meta property="og:description" content="Hystrix说明官方文档 [https://github.com/Netflix/Hystrix/wiki]  hystrix是netflix开源的一个容灾框架，解决当外部依赖故障时拖垮业务系统、甚至引起雪崩的问题。  2.1为什么需要Hystrix?在大中型分布式系统中，通常系统很多依赖(HTTP,hession,Netty,Dubbo等)，在高并发访问下,这些依赖的稳定性与否对系统的影响非常">
+<meta property="og:image" content="http://res.51so.info/Fkh9L5upqJQ1ltxVoD0kdPLmlISI">
+<meta property="og:image" content="http://res.51so.info/FjWtAPQc0fw4YNK4ByCVWYtouxST">
+<meta property="og:image" content="http://res.51so.info/FmjMCyQ7S8OLdrXHdTeDDfzeIpT7">
+<meta property="og:image" content="http://res.51so.info/FsRjJ53V5dVVMD07m1Ei-z4fIcZj">
+<meta property="og:image" content="http://res.51so.info/FsIzr6subu6ZbL00d8dgRpXj4gR3">
+<meta property="og:image" content="http://res.51so.info/FhmlkOiF6ufbKKahwyP_NrWLqqWF">
+<meta property="og:image" content="http://res.51so.info/Ft5rChMLxeDkmfM-H8zLL8gifS0E">
+<meta property="og:image" content="http://res.51so.info/FkoHgCXO0-N2LsA4ZtD_GXAHqxmw">
+<meta property="og:image" content="http://res.51so.info/Fou1sQMXnLsbRyzEP0YMwvPNRCqm">
+<meta property="og:image" content="http://res.51so.info/FlELH80MtzjaajRL0gfVPNPM5uqp">
+<meta property="og:image" content="http://res.51so.info/FpN14CCj2mr5bgCapiSzwN8vI58Y">
+<meta property="og:updated_time" content="2018-01-02T03:19:49.859Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git与svn的区别">
-<meta name="twitter:description" content="GIT不仅仅是个版本控制系统，它也是个内容管理系统(CMS),工作管理系统等。如果你是一个具有使用SVN背景的人，你需要做一定的思想转换，来适应GIT提供的一些概念和特征。所以，这篇文章的主要目的就是通过介绍GIT能做什么、它和SVN在深层次上究竟有什么不同来帮助你认识它。  1.GIT是分布式的，SVN不是：这是GIT和其它非分布式的版本控制系统，例如SVN，CVS等，最核心的区别。如果你能理">
+<meta name="twitter:title" content="使用 Hystrix 实现自动降级与依赖隔离">
+<meta name="twitter:description" content="Hystrix说明官方文档 [https://github.com/Netflix/Hystrix/wiki]  hystrix是netflix开源的一个容灾框架，解决当外部依赖故障时拖垮业务系统、甚至引起雪崩的问题。  2.1为什么需要Hystrix?在大中型分布式系统中，通常系统很多依赖(HTTP,hession,Netty,Dubbo等)，在高并发访问下,这些依赖的稳定性与否对系统的影响非常">
+<meta name="twitter:image" content="http://res.51so.info/Fkh9L5upqJQ1ltxVoD0kdPLmlISI">
   
     <link rel="alternative" href="/atom.xml" title="kings.chan的博客" type="application/atom+xml">
   
@@ -170,39 +182,153 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-2015-12-03-git&amp;svn-difference" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-2018-01-02-use-hystrix-impl-autofallback&amp;isolation" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      git与svn的区别
+      使用 Hystrix 实现自动降级与依赖隔离
     </h1>
   
 
         
-        <a href="/2015/12/03/2015-12-03-git&svn-difference/" class="archive-article-date">
-  	<time datetime="2015-12-02T16:24:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-12-03</time>
+        <a href="/2018/01/02/2018-01-02-use-hystrix-impl-autofallback&isolation/" class="archive-article-date">
+  	<time datetime="2018-01-02T03:19:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>GIT不仅仅是个版本控制系统，它也是个内容管理系统(CMS),工作管理系统等。如果你是一个具有使用SVN背景的人，你需要做一定的思想转换，来适应GIT提供的一些概念和特征。所以，这篇文章的主要目的就是通过介绍GIT能做什么、它和SVN在深层次上究竟有什么不同来帮助你认识它。</p>
+        <h2 id="Hystrix说明"><a href="#Hystrix说明" class="headerlink" title="Hystrix说明"></a>Hystrix说明</h2><p>官方文档 [<a href="https://github.com/Netflix/Hystrix/wiki" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki</a>]</p>
+<blockquote>
+<p>hystrix是netflix开源的一个容灾框架，解决当外部依赖故障时拖垮业务系统、甚至引起雪崩的问题。</p>
 </blockquote>
-<h3 id="1-GIT是分布式的，SVN不是："><a href="#1-GIT是分布式的，SVN不是：" class="headerlink" title="1.GIT是分布式的，SVN不是："></a>1.GIT是分布式的，SVN不是：</h3><p>这是GIT和其它非分布式的版本控制系统，例如SVN，CVS等，最核心的区别。如果你能理解这个概念，那么你就已经上手一半了。需要做一点声明，GIT并不是目前第一个或唯一的分布式版本控制系统。还有一些系统，例如Bitkeeper, Mercurial等，也是运行在分布式模式上的。但GIT在这方面做的更好，而且有更多强大的功能特征。</p>
-<p>GIT跟SVN一样有自己的集中式版本库或服务器。但，GIT更倾向于被使用于分布式模式，也就是每个开发人员从中心版本库/服务器上chect out代码后会在自己的机器上克隆一个自己的版本库。可以这样说，如果你被困在一个不能连接网络的地方时，就像在飞机上，地下室，电梯里等，你仍然能够提交文件，查看历史版本记录，创建项目分支，等。对一些人来说，这好像没多大用处，但当你突然遇到没有网络的环境时，这个将解决你的大麻烦。<br><a id="more"></a><br>同样，这种分布式的操作模式对于开源软件社区的开发来说也是个巨大的恩赐，你不必再像以前那样做出补丁包，通过email方式发送出去，你只需要创建一个分支，向项目团队发送一个推请求。这能让你的代码保持最新，而且不会在传输过程中丢失。GitHub.com就是一个这样的优秀案例。</p>
-<p>有些谣言传出来说subversion将来的版本也会基于分布式模式。但至少目前还看不出来。</p>
-<h3 id="2-GIT把内容按元数据方式存储，而SVN是按文件："><a href="#2-GIT把内容按元数据方式存储，而SVN是按文件：" class="headerlink" title="2.GIT把内容按元数据方式存储，而SVN是按文件："></a>2.GIT把内容按元数据方式存储，而SVN是按文件：</h3><p>所有的资源控制系统都是把文件的元信息隐藏在一个类似.svn,.cvs等的文件夹里。如果你把.git目录的体积大小跟.svn比较，你会发现它们差距很大。因为,.git目录是处于你的机器上的一个克隆版的版本库，它拥有中心版本库上所有的东西，例如标签，分支，版本记录等。</p>
-<h3 id="3-GIT分支和SVN的分支不同："><a href="#3-GIT分支和SVN的分支不同：" class="headerlink" title="3.GIT分支和SVN的分支不同："></a>3.GIT分支和SVN的分支不同：</h3><p>分支在SVN中一点不特别，就是版本库中的另外的一个目录。如果你想知道是否合并了一个分支，你需要手工运行像这样的命令svn propget svn:mergeinfo，来确认代码是否被合并。感谢Ben同学指出这个特征。所以，经常会发生有些分支被遗漏的情况。</p>
-<p>然而，处理GIT的分支却是相当的简单和有趣。你可以从同一个工作目录下快速的在几个分支间切换。你很容易发现未被合并的分支，你能简单而快捷的合并这些文件。</p>
-<h3 id="4-GIT没有一个全局的版本号，而SVN有："><a href="#4-GIT没有一个全局的版本号，而SVN有：" class="headerlink" title="4.GIT没有一个全局的版本号，而SVN有："></a>4.GIT没有一个全局的版本号，而SVN有：</h3><p>目前为止这是跟SVN相比GIT缺少的最大的一个特征。你也知道，SVN的版本号实际是任何一个相应时间的源代码快照。我认为它是从CVS进化到SVN的最大的一个突破。因为GIT和SVN从概念上就不同，我不知道GIT里是什么特征与之对应。如果你有任何的线索，请在评论里奉献出来与大家共享。</p>
-<p>更新：有些读者指出，我们可以使用GIT的SHA-1来唯一的标识一个代码快照。这个并不能完全的代替SVN里容易阅读的数字版本号。但，用途应该是相同的。</p>
-<h3 id="5-GIT的内容完整性要优于SVN："><a href="#5-GIT的内容完整性要优于SVN：" class="headerlink" title="5.GIT的内容完整性要优于SVN："></a>5.GIT的内容完整性要优于SVN：</h3><p>GIT的内容存储使用的是SHA-1哈希算法。这能确保代码内容的完整性，确保在遇到磁盘故障和网络问题时降低对版本库的破坏。这里有一个很好的关于GIT内容完整性的讨论 – <a href="http://stackoverflow.com/questions/964331/git-file-integrity" target="_blank" rel="noopener">http://stackoverflow.com/questions/964331/git-file-integrity</a></p>
-<p>GIT和SVN之间只有这五处不同吗？当然不是。我想这5个只是“最基本的”和“最吸引人”的，我只想到这5点。如果你发现有比这5点更有趣的，请共享出来，欢迎。 </p>
+<h3 id="2-1为什么需要Hystrix"><a href="#2-1为什么需要Hystrix" class="headerlink" title="2.1为什么需要Hystrix?"></a>2.1为什么需要Hystrix?</h3><p>在大中型分布式系统中，通常系统很多依赖(HTTP,hession,Netty,Dubbo等)，在高并发访问下,这些依赖的稳定性与否对系统的影响非常大,但是依赖有很多不可控问题:如网络连接缓慢，资源繁忙，暂时不可用，服务脱机等。</p>
+<p>当依赖阻塞时,大多数服务器的线程池就出现阻塞(BLOCK),影响整个线上服务的稳定性，在复杂的分布式架构的应用程序有很多的依赖，都会不可避免地在某些时候失败。高并发的依赖失败时如果没有隔离措施，当前应用服务就有被拖垮的风险。</p>
+<blockquote>
+<p><code>例如:一个依赖``30``个SOA服务的系统,每个服务``99.99``%可用。</code></p>
+<pre><code>`99.99``%的``30``次方 ≈&amp;nbsp;``99.7``%`
+
+`0.3``% 意味着一亿次请求 会有&amp;nbsp;``3``,``000``,``00``次失败`
+
+`换算成时间大约每月有``2``个小时服务不稳定.`
+
+`随着服务依赖数量的变多，服务不稳定的概率会成指数性提高.`
+</code></pre></blockquote>
+<p>解决问题方案:对依赖做隔离。<br><a id="more"></a></p>
+<h3 id="2-2Hystrix设计理念"><a href="#2-2Hystrix设计理念" class="headerlink" title="2.2Hystrix设计理念"></a>2.2Hystrix设计理念</h3><p>想要知道如何使用，必须先明白其核心设计理念，Hystrix基于命令模式，通过UML图先直观的认识一下这一<a href="http://www.amazon.cn/gp/product/B001130JN8/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;tag=importnew-23&amp;linkCode=as2&amp;camp=536&amp;creative=3200&amp;creativeASIN=B001130JN8" title="设计模式:可复用面向对象软件的基础" target="_blank" rel="noopener">设计模式</a></p>
+<p><img src="http://res.51so.info/Fkh9L5upqJQ1ltxVoD0kdPLmlISI" alt="" title="5401760-45acdab61a10e6cd"></p>
+<p>可见，Command是在Receiver和Invoker之间添加的中间层，Command实现了对Receiver的封装。那么Hystrix的应用场景如何与上图对应呢？</p>
+<p>API既可以是Invoker又可以是reciever，通过继承Hystrix核心类HystrixCommand来封装这些API（例如，远程接口调用，数据库查询之类可能会产生延时的操作）。就可以为API提供弹性保护了。</p>
+<h3 id="2-3-nbsp-Hystrix如何解决依赖隔离"><a href="#2-3-nbsp-Hystrix如何解决依赖隔离" class="headerlink" title="2.3&nbsp;Hystrix如何解决依赖隔离"></a>2.3&nbsp;Hystrix如何解决依赖隔离</h3><p>1: Hystrix使用命令模式HystrixCommand(Command)包装依赖调用逻辑，每个命令在单独线程中/信号授权下执行。<br>2: 可配置依赖调用超时时间,超时时间一般设为比99.5%平均时间略高即可.当调用超时时，直接返回或执行fallback逻辑。<br>3: 为每个依赖提供一个小的线程池（或信号），如果线程池已满调用将被立即拒绝，默认不采用排队.加速失败判定时间。<br>4: 依赖调用结果分:成功，失败（抛出异常），超时，线程拒绝，短路。 请求失败(异常，拒绝，超时，短路)时执行fallback(降级)逻辑。<br>5: 提供熔断器组件,可以自动运行或手动调用,停止当前依赖一段时间(10秒)，熔断器默认错误率阈值为50%,超过将自动运行。<br>6: 提供近实时依赖的统计和监控</p>
+<h3 id="2-4Hystrix流程结构解析"><a href="#2-4Hystrix流程结构解析" class="headerlink" title="2.4Hystrix流程结构解析"></a>2.4Hystrix流程结构解析</h3><p><img src="http://res.51so.info/FjWtAPQc0fw4YNK4ByCVWYtouxST" alt="" title="5401760-c31d8a457c29fe97"></p>
+<p><code>流程说明:</code></p>
+<ul>
+<li><p>1:每次调用创建一个新的HystrixCommand,把依赖调用封装在run()方法中.</p>
+</li>
+<li><p>2:执行execute()/queue做同步或异步调用.</p>
+</li>
+<li><p>3:判断熔断器(circuit-breaker)是否打开,如果打开跳到步骤8,进行降级策略,如果关闭进入步骤.</p>
+</li>
+<li><p>4:判断线程池/队列/信号量是否跑满，如果跑满进入降级步骤8,否则继续后续步骤.</p>
+</li>
+<li><p>5:调用HystrixCommand的run方法.运行依赖逻辑</p>
+</li>
+<li><p>5a:依赖逻辑调用超时,进入步骤8.</p>
+</li>
+<li><p>6:判断逻辑是否调用成功</p>
+</li>
+<li><p>6a:返回成功调用结果</p>
+</li>
+<li><p>6b:调用出错，进入步骤8.</p>
+</li>
+<li><p>7:计算熔断器状态,所有的运行状态(成功, 失败, 拒绝,超时)上报给熔断器，用于统计从而判断熔断器状态.</p>
+</li>
+<li><p>8:getFallback()降级逻辑.</p>
+</li>
+<li><p>&nbsp;&nbsp;以下四种情况将触发getFallback调用：</p>
+</li>
+<li><p>&nbsp;(1):run()方法抛出非HystrixBadRequestException异常。</p>
+</li>
+<li><p>&nbsp;(2):run()方法调用超时</p>
+</li>
+<li><p>&nbsp;(3):熔断器开启拦截调用</p>
+</li>
+<li><p>&nbsp;(4):线程池/队列/信号量是否跑满</p>
+</li>
+<li><p>8a:没有实现getFallback的Command将直接抛出异常</p>
+</li>
+<li><p>8b:fallback降级逻辑调用成功直接返回</p>
+</li>
+<li><p>8c:降级逻辑调用失败抛出异常</p>
+</li>
+<li><p>9:返回执行成功结果</p>
+</li>
+</ul>
+<h3 id="2-5-nbsp-熔断器-Circuit-Breaker"><a href="#2-5-nbsp-熔断器-Circuit-Breaker" class="headerlink" title="2.5&nbsp;熔断器:Circuit Breaker"></a>2.5&nbsp;熔断器:Circuit Breaker</h3><p>每个熔断器默认维护10个bucket,每秒一个bucket,每个bucket记录成功,失败,超时,拒绝的状态，</p>
+<p>默认错误超过50%且10秒内超过20个请求进行中断拦截.</p>
+<p><img src="http://res.51so.info/FmjMCyQ7S8OLdrXHdTeDDfzeIpT7" alt="" title="5401760-7fef5c2b61be1fcc"></p>
+<h3 id="2-6-Hystrix隔离分析"><a href="#2-6-Hystrix隔离分析" class="headerlink" title="2.6 Hystrix隔离分析"></a>2.6 Hystrix隔离分析</h3><p>Hystrix隔离方式采用线程/信号的方式,通过隔离限制依赖的并发量和阻塞扩散.</p>
+<p><strong>(1)线程隔离</strong></p>
+<p>把执行依赖代码的线程与请求线程(如:jetty线程)分离，请求线程可以自由控制离开的时间(异步过程)。</p>
+<p>通过线程池大小可以控制并发量，当线程池饱和时可以提前拒绝服务,防止依赖问题扩散。</p>
+<p>线上建议线程池不要设置过大，否则大量堵塞线程有可能会拖慢服务器。</p>
+<p><strong>(2)线程隔离的优缺点</strong></p>
+<ul>
+<li>线程隔离的优点:</li>
+</ul>
+<ul>
+<li>线程隔离的缺点:</li>
+</ul>
+<ul>
+<li><p>NOTE: Netflix公司内部认为线程隔离开销足够小，不会造成重大的成本或性能的影响。</p>
+</li>
+<li><p>Netflix 内部API 每天100亿的HystrixCommand依赖请求使用线程隔，每个应用大约40多个线程池，每个线程池大约5-20个线程。</p>
+</li>
+</ul>
+<p><strong>(3)信号隔离</strong></p>
+<ul>
+<li><p>信号隔离也可以用于限制并发访问，防止阻塞扩散, 与线程隔离最大不同在于执行依赖代码的线程依然是请求线程（该线程需要通过信号申请）,</p>
+</li>
+<li><p>如果客户端是可信的且可以快速返回，可以使用信号隔离替换线程隔离,降低开销.</p>
+</li>
+<li><p>信号量的大小可以动态调整, 线程池大小不可以.</p>
+</li>
+</ul>
+<p>线程隔离与信号隔离区别如下图:</p>
+<p><img src="http://res.51so.info/FsRjJ53V5dVVMD07m1Ei-z4fIcZj" alt="" title="5401760-6306aa0db17287c8"></p>
+<h2 id="3-接入方式"><a href="#3-接入方式" class="headerlink" title="3.接入方式"></a>3.接入方式</h2><p>本文会重点介绍基于服务化项目（thrift服务化项目）的接入方式。</p>
+<h3 id="3-1添加hystrix依赖"><a href="#3-1添加hystrix依赖" class="headerlink" title="3.1添加hystrix依赖"></a>3.1添加hystrix依赖</h3><blockquote>
+<p>关于版本问题：由于不同版本Compile Dependencies不同，在使用过程中可以针对具体情况修改版本，具体依赖关系<a href="http://mvnrepository.com/artifact/com.netflix.hystrix/hystrix-javanica" target="_blank" rel="noopener">http://mvnrepository.com/artifact/com.netflix.hystrix/hystrix-javanica</a><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">hystrix-version</span>&gt;</span>1.4.22<span class="tag">&lt;/<span class="name">hystrix-version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;hystrix-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-metrics-event-stream<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;hystrix-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-javanica<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;hystrix-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-servo-metrics-publisher<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;hystrix-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.meituan.service.us<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-collector<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="3-2引入Hystrix-Aspect"><a href="#3-2引入Hystrix-Aspect" class="headerlink" title="3.2引入Hystrix Aspect"></a>3.2引入Hystrix Aspect</h3><p>application-context.xml文件中<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hystrixAspect"</span><span class="attr">class</span>=<span class="string">"com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect"</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.***.***"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:annotation-config</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>注意：</p>
+<p>1）hystrixAspect的这两行配置一定要和下面的context:component-scan放在同一个文件<br>2）Hystrix依赖的一些jar需要解决冲突问题，例如guava为15.0版本</p>
+<h3 id="3-3统计数据"><a href="#3-3统计数据" class="headerlink" title="3.3统计数据"></a>3.3统计数据</h3><p>需要注册plugin，直接从plugin中获取统计数据</p>
+<p>新增初始化Bean<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.meituan.service.us.collector.notifier.CustomEventNotifier;</span><br><span class="line"><span class="keyword">import</span> com.netflix.hystrix.contrib.servopublisher.HystrixServoMetricsPublisher;</span><br><span class="line"><span class="keyword">import</span> com.netflix.hystrix.strategy.HystrixPlugins;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.InitializingBean;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixMetricsInitializingBean</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(HystrixMetricsInitializingBean.class);</span><br><span class="line"> </span><br><span class="line">    publicvoidinit() throwsException &#123;</span><br><span class="line">        LOGGER.info(<span class="string">"HystrixMetrics starting..."</span>);</span><br><span class="line">        HystrixPlugins.getInstance().registerEventNotifier(CustomEventNotifier.getInstance());</span><br><span class="line">        HystrixPlugins.getInstance().registerMetricsPublisher(HystrixServoMetricsPublisher.getInstance());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="application-context-xml文件中"><a href="#application-context-xml文件中" class="headerlink" title="application-context.xml文件中"></a>application-context.xml文件中</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hystrixMetricsInitializingBean"</span><span class="attr">class</span>=<span class="string">"com.***.HystrixMetricsInitializingBean"</span><span class="attr">init-method</span>=<span class="string">"init"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>本文使用同步执行方式，因此注解及方法实现都为同步方式，如果有异步执行、反应执行的需求，可以参考：官方注解说明<a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica]" target="_blank" rel="noopener">[https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica]</a></p>
+</blockquote>
+<h3 id="3-4添加注解"><a href="#3-4添加注解" class="headerlink" title="3.4添加注解"></a>3.4添加注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span>(groupKey = <span class="string">"productStockOpLog"</span>, commandKey = <span class="string">"addProductStockOpLog"</span>, fallbackMethod = <span class="string">"addProductStockOpLogFallback"</span>,</span><br><span class="line">        commandProperties = &#123;</span><br><span class="line">                <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.isolation.thread.timeoutInMilliseconds"</span>, value = <span class="string">"400"</span>),<span class="comment">//指定多久超时，单位毫秒。超时进fallback</span></span><br><span class="line">                <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.requestVolumeThreshold"</span>, value = <span class="string">"10"</span>),<span class="comment">//判断熔断的最少请求数，默认是10；只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断</span></span><br><span class="line">                <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.errorThresholdPercentage"</span>, value = <span class="string">"10"</span>),<span class="comment">//判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断</span></span><br><span class="line">        &#125;</span><br><span class="line">)</span><br><span class="line">publicvoidaddProductStockOpLog(Long sku_id, Object old_value, Object new_value) throwsException &#123;</span><br><span class="line">    <span class="keyword">if</span>(new_value != <span class="keyword">null</span>&amp;&amp; !new_value.equals(old_value)) &#123;</span><br><span class="line">        doAddOpLog(<span class="keyword">null</span>, <span class="keyword">null</span>, sku_id, <span class="keyword">null</span>, ProductOpType.PRODUCT_STOCK, old_value != <span class="keyword">null</span>? String.valueOf(old_value) : <span class="keyword">null</span>, String.valueOf(new_value), <span class="number">0</span>, <span class="string">"C端"</span>, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">publicvoidaddProductStockOpLogFallback(Long sku_id, Object old_value, Object new_value) throwsException &#123;</span><br><span class="line">    LOGGER.warn(<span class="string">"发送商品库存变更消息失败,进入Fallback,skuId:&#123;&#125;,oldValue:&#123;&#125;,newValue:&#123;&#125;"</span>, sku_id, old_value, new_value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span>(groupKey=<span class="string">"UserGroup"</span>, commandKey = <span class="string">"GetUserByIdCommand"</span>，</span><br><span class="line">                commandProperties = &#123;</span><br><span class="line">                    <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.isolation.thread.timeoutInMilliseconds"</span>, value = <span class="string">"100"</span>),<span class="comment">//指定多久超时，单位毫秒。超时进fallback</span></span><br><span class="line">                    <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.requestVolumeThreshold"</span>, value = <span class="string">"10"</span>),<span class="comment">//判断熔断的最少请求数，默认是10；只有在一个统计窗口内处理的请求数量达到这个阈值，才会进行熔断与否的判断</span></span><br><span class="line">                    <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.errorThresholdPercentage"</span>, value = <span class="string">"10"</span>),<span class="comment">//判断熔断的阈值，默认值50，表示在一个统计窗口内有50%的请求处理失败，会触发熔断</span></span><br><span class="line">                &#125;,</span><br><span class="line">                threadPoolProperties = &#123;</span><br><span class="line">                        <span class="meta">@HystrixProperty</span>(name = <span class="string">"coreSize"</span>, value = <span class="string">"30"</span>),</span><br><span class="line">                        <span class="meta">@HystrixProperty</span>(name = <span class="string">"maxQueueSize"</span>, value = <span class="string">"101"</span>),</span><br><span class="line">                        <span class="meta">@HystrixProperty</span>(name = <span class="string">"keepAliveTimeMinutes"</span>, value = <span class="string">"2"</span>),</span><br><span class="line">                        <span class="meta">@HystrixProperty</span>(name = <span class="string">"queueSizeRejectionThreshold"</span>, value = <span class="string">"15"</span>),</span><br><span class="line">                        <span class="meta">@HystrixProperty</span>(name = <span class="string">"metrics.rollingStats.numBuckets"</span>, value = <span class="string">"12"</span>),</span><br><span class="line">                        <span class="meta">@HystrixProperty</span>(name = <span class="string">"metrics.rollingStats.timeInMilliseconds"</span>, value = <span class="string">"1440"</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">hystrix函数需要放在一个service中，并且，在类本身的其他函数中调用hystrix函数，是无法达到监控的目的的。说明：hystrix函数必须为<span class="keyword">public</span>，fallback函数可以为<span class="keyword">private</span>。两者需要返回值和参数相同 详情。</span><br></pre></td></tr></table></figure>
+<h3 id="3-5参数配置"><a href="#3-5参数配置" class="headerlink" title="3.5参数配置"></a>3.5参数配置</h3><p><a href="http://www.importnew.com/25704.html/qq20170715-2337372x" target="_blank" rel="noopener"><img src="http://res.51so.info/FsIzr6subu6ZbL00d8dgRpXj4gR3" alt="" title="QQ20170715-233737@2x"></a><a href="http://www.importnew.com/25704.html/qq20170715-2337582x" target="_blank" rel="noopener"><img src="http://res.51so.info/FhmlkOiF6ufbKKahwyP_NrWLqqWF" alt="" title="QQ20170715-233758@2x"></a></p>
+<h2 id="4-参数说明"><a href="#4-参数说明" class="headerlink" title="4.参数说明"></a>4.参数说明</h2><p>其他参数可参见 <a href="https://github.com/Netflix/Hystrix/wiki/Con" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/Con</a></p>
+<p><a href="http://www.importnew.com/25704.html/qq20170715-2350202x" target="_blank" rel="noopener"><img src="http://res.51so.info/Ft5rChMLxeDkmfM-H8zLL8gifS0E" alt="" title="QQ20170715-235020@2x"></a><a href="http://www.importnew.com/25704.html/qq20170715-2341172x" target="_blank" rel="noopener"><img src="http://res.51so.info/FkoHgCXO0-N2LsA4ZtD_GXAHqxmw" alt="" title="QQ20170715-234117@2x"></a><a href="http://www.importnew.com/25704.html/qq20170715-2352552x" target="_blank" rel="noopener"><img src="http://res.51so.info/Fou1sQMXnLsbRyzEP0YMwvPNRCqm" alt="" title="QQ20170715-235255@2x"></a><img src="http://res.51so.info/FlELH80MtzjaajRL0gfVPNPM5uqp" alt="" title="QQ20170715-235317@2x"></p>
+<h2 id="5-性能测试"><a href="#5-性能测试" class="headerlink" title="5.性能测试"></a>5.性能测试</h2><h3 id="5-1测试情况"><a href="#5-1测试情况" class="headerlink" title="5.1测试情况"></a>5.1测试情况</h3><p><img src="http://res.51so.info/FpN14CCj2mr5bgCapiSzwN8vI58Y" alt="" title="5401760-5a16f2aca35cf393"></p>
+<p>去除Cold状态的第一个异常点后，1-10测试场景的Hystrix平均耗时如上图所示， 可以得出结论：</p>
+<ol>
+<li><p>单个HystrixCommand的额外耗时基本稳定处于0.3ms左右，和线程池大小无关，和client数量无关</p>
+</li>
+<li><p>hystrix的额外耗时和执行的HystrixCommand数量有关系，随着command数量增多，耗时增加，但是增量较小，没有比例关系</p>
+</li>
+<li><p>App刚启动时，第一个请求耗时300+ms，随后请求的耗时降低至1ms以下；刚启动的一小段时间内耗时略大于Hot状态时耗时，总体不超过1ms。</p>
+</li>
+</ol>
 
       
 
@@ -247,7 +373,11 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">spring cloud</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">hystrix</a>
         		</li>
       		
 		</ul>
@@ -259,7 +389,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/技术笔记//" class="article-tag-list-link color5">技术笔记</a>
+        			<a href="/categories/微服务//" class="article-tag-list-link color4">微服务</a>
         		</li>
       		
 		</ul>
@@ -314,7 +444,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=https://kingschan1204.github.io/2015/12/03/2015-12-03-git&svn-difference/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kingschan1204.github.io/2018/01/02/2018-01-02-use-hystrix-impl-autofallback&isolation/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -328,15 +458,11 @@ var _hmt = _hmt || [];
   
 <nav id="article-nav">
   
-    <a href="/2016/09/01/2016-09-01-mac-develop-tools/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          mac开发常用工具整理
-        
-      </div>
-    </a>
   
+    <a href="/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">针对故障设计微服务架构</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
@@ -361,7 +487,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-GIT是分布式的，SVN不是："><span class="toc-number">1.</span> <span class="toc-text">1.GIT是分布式的，SVN不是：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-GIT把内容按元数据方式存储，而SVN是按文件："><span class="toc-number">2.</span> <span class="toc-text">2.GIT把内容按元数据方式存储，而SVN是按文件：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-GIT分支和SVN的分支不同："><span class="toc-number">3.</span> <span class="toc-text">3.GIT分支和SVN的分支不同：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-GIT没有一个全局的版本号，而SVN有："><span class="toc-number">4.</span> <span class="toc-text">4.GIT没有一个全局的版本号，而SVN有：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-GIT的内容完整性要优于SVN："><span class="toc-number">5.</span> <span class="toc-text">5.GIT的内容完整性要优于SVN：</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hystrix说明"><span class="toc-number">1.</span> <span class="toc-text">Hystrix说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1为什么需要Hystrix"><span class="toc-number">1.1.</span> <span class="toc-text">2.1为什么需要Hystrix?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2Hystrix设计理念"><span class="toc-number">1.2.</span> <span class="toc-text">2.2Hystrix设计理念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-nbsp-Hystrix如何解决依赖隔离"><span class="toc-number">1.3.</span> <span class="toc-text">2.3 Hystrix如何解决依赖隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4Hystrix流程结构解析"><span class="toc-number">1.4.</span> <span class="toc-text">2.4Hystrix流程结构解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-nbsp-熔断器-Circuit-Breaker"><span class="toc-number">1.5.</span> <span class="toc-text">2.5 熔断器:Circuit Breaker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-Hystrix隔离分析"><span class="toc-number">1.6.</span> <span class="toc-text">2.6 Hystrix隔离分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-接入方式"><span class="toc-number">2.</span> <span class="toc-text">3.接入方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1添加hystrix依赖"><span class="toc-number">2.1.</span> <span class="toc-text">3.1添加hystrix依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2引入Hystrix-Aspect"><span class="toc-number">2.2.</span> <span class="toc-text">3.2引入Hystrix Aspect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3统计数据"><span class="toc-number">2.3.</span> <span class="toc-text">3.3统计数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#application-context-xml文件中"><span class="toc-number">2.4.</span> <span class="toc-text">application-context.xml文件中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4添加注解"><span class="toc-number">2.5.</span> <span class="toc-text">3.4添加注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5参数配置"><span class="toc-number">2.6.</span> <span class="toc-text">3.5参数配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-参数说明"><span class="toc-number">3.</span> <span class="toc-text">4.参数说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-性能测试"><span class="toc-number">4.</span> <span class="toc-text">5.性能测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1测试情况"><span class="toc-number">4.1.</span> <span class="toc-text">5.1测试情况</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -377,7 +503,7 @@ var _hmt = _hmt || [];
   
 
   
-  <div id="SOHUCS" sid="2015-12-03-git&amp;svn-difference" ></div> 
+  <div id="SOHUCS" sid="2018-01-02-use-hystrix-impl-autofallback&amp;isolation" ></div> 
 <script charset="utf-8" type="text/javascript" src="//changyan.sohu.com/upload/changyan.js" ></script>
 <script type="text/javascript">
     window.changyan.api.config({
