@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://kingschan1204.github.io">
-  <title>kings.chan的博客</title>
+  <title>Spring boot 神器之actuator | kings.chan的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="java工程师一枚，从事微服务架构开发！">
-<meta name="keywords" content="微服务,kingschan,容器,java,架构,程序员,开发,spring cloud">
-<meta property="og:type" content="website">
-<meta property="og:title" content="kings.chan的博客">
-<meta property="og:url" content="https://kingschan1204.github.io/index.html">
+  <meta name="description" content="在Spring Boot的众多Starter POMs中有一个特殊的模块，它不同于其他模块那样大多用于开发业务功能或是连接一些其他外部资源。它完全是一个用于暴露自身信息的模块，所以很明显，它的主要作用是用于监控与管理，它就是：spring-boot-starter-actuator。spring-boot-starter-actuator模块的实现对于实施微服务的中小团队来说，可以有效地减少监控">
+<meta name="keywords" content="spring cloud,actuator">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring boot 神器之actuator">
+<meta property="og:url" content="https://kingschan1204.github.io/2018/01/17/2018-01-17-spring-actuator/index.html">
 <meta property="og:site_name" content="kings.chan的博客">
-<meta property="og:description" content="java工程师一枚，从事微服务架构开发！">
+<meta property="og:description" content="在Spring Boot的众多Starter POMs中有一个特殊的模块，它不同于其他模块那样大多用于开发业务功能或是连接一些其他外部资源。它完全是一个用于暴露自身信息的模块，所以很明显，它的主要作用是用于监控与管理，它就是：spring-boot-starter-actuator。spring-boot-starter-actuator模块的实现对于实施微服务的中小团队来说，可以有效地减少监控">
+<meta property="og:updated_time" content="2018-01-17T09:33:10.569Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kings.chan的博客">
-<meta name="twitter:description" content="java工程师一枚，从事微服务架构开发！">
+<meta name="twitter:title" content="Spring boot 神器之actuator">
+<meta name="twitter:description" content="在Spring Boot的众多Starter POMs中有一个特殊的模块，它不同于其他模块那样大多用于开发业务功能或是连接一些其他外部资源。它完全是一个用于暴露自身信息的模块，所以很明显，它的主要作用是用于监控与管理，它就是：spring-boot-starter-actuator。spring-boot-starter-actuator模块的实现对于实施微服务的中小团队来说，可以有效地减少监控">
   
     <link rel="alternative" href="/atom.xml" title="kings.chan的博客" type="application/atom+xml">
   
@@ -169,16 +170,14 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-2018-01-17-spring-actuator" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-2018-01-17-spring-actuator" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/17/2018-01-17-spring-actuator/">Spring boot 神器之actuator</a>
+    <h1 class="article-title" itemprop="name">
+      Spring boot 神器之actuator
     </h1>
   
 
@@ -338,6 +337,37 @@ var _hmt = _hmt || [];
       
 
       
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>感谢你的支持，我会继续努力！<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/images/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/images/weixinpay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
     </div>
     <div class="article-info article-info-index">
       
@@ -371,16 +401,75 @@ var _hmt = _hmt || [];
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/17/2018-01-17-spring-actuator/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://kingschan1204.github.io/2018/01/17/2018-01-17-spring-actuator/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/01/06/2018-01-06-change-eureka-healthcheck-style/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">改变eureka server中注册的服务的健康检测方式</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -395,891 +484,42 @@ var _hmt = _hmt || [];
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2018-01-06-change-eureka-healthcheck-style" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/06/2018-01-06-change-eureka-healthcheck-style/">改变eureka server中注册的服务的健康检测方式</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/06/2018-01-06-change-eureka-healthcheck-style/" class="archive-article-date">
-  	<time datetime="2018-01-06T02:20:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>默认情况下注册到eureka server的服务是通过心跳来告知自己是UP还是DOWN，并不是通过spring-boot-actuator模块的/health端点来实现的，这样其实不是很合理</strong></p>
-<blockquote>
-<p>默认的心跳实现方式可以有效的检查eureka客户端进程是否正常运作，但是无法保证客户端应用能够正常提供服务。由于大多数微服务应用都会有一些其他的外部资源依赖，比如数据库，REDIS缓存等，如果我们的应用与这些外部资源无法连通的时候，实际上已经不能提供正常的对外服务了，但因为客户端心跳依然在运行，所以它还是会被服务消费者调用，而这样的调用实际上并不能获得预期的后果。</p>
-<p>我们可以通过在eureka客户端中配置:<code>eureka.client.healthcheck.enabled=true</code>，就可以改变<strong>eureka server对客户端健康检测的方式</strong>，改用actuator的/health端点来检测。</p>
-</blockquote>
-<p>添加一个自定义的HealthIndicator:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.actuate.health.Health;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.actuate.health.HealthIndicator;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyHealthChecker</span> <span class="keyword">implements</span> <span class="title">HealthIndicator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> up = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Health <span class="title">health</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (up) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Health.Builder().withDetail(<span class="string">"aaa_cnt"</span>, <span class="number">10</span>) <span class="comment">//自定义监控内容</span></span><br><span class="line">                    .withDetail(<span class="string">"bbb_status"</span>, <span class="string">"up"</span>).up().build();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Health.Builder().withDetail(<span class="string">"error"</span>, <span class="string">"client is down"</span>).down().build();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isUp</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> up;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">(<span class="keyword">boolean</span> up)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.up = up;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>里面有一个成员变量up，用来控制是否监控，下面我们会在请求中改变这个变量的值来模拟健康状态UP-&gt;DOWN</p>
-        
-          <a class="article-more-a" href="/2018/01/06/2018-01-06-change-eureka-healthcheck-style/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">spring cloud</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">eureka</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/微服务//" class="article-tag-list-link color4">微服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/06/2018-01-06-change-eureka-healthcheck-style/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用actuator"><span class="toc-number">1.</span> <span class="toc-text">使用actuator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要暴露的功能"><span class="toc-number">2.</span> <span class="toc-text">主要暴露的功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#例子"><span class="toc-number">2.1.</span> <span class="toc-text">例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#autoconfig"><span class="toc-number">3.</span> <span class="toc-text">/autoconfig</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#configprops"><span class="toc-number">4.</span> <span class="toc-text">/configprops</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#beans"><span class="toc-number">5.</span> <span class="toc-text">/beans</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dump"><span class="toc-number">6.</span> <span class="toc-text">/dump</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#env"><span class="toc-number">7.</span> <span class="toc-text">/env</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#health"><span class="toc-number">8.</span> <span class="toc-text">/health</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#info"><span class="toc-number">9.</span> <span class="toc-text">/info</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mappings"><span class="toc-number">10.</span> <span class="toc-text">/mappings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#metrics"><span class="toc-number">11.</span> <span class="toc-text">/metrics</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shutdown"><span class="toc-number">12.</span> <span class="toc-text">/shutdown</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#trace"><span class="toc-number">13.</span> <span class="toc-text">/trace</span></a></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
-  
-    <article id="post-2018-01-02-use-hystrix-impl-autofallback&amp;isolation" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/02/2018-01-02-use-hystrix-impl-autofallback&isolation/">使用 Hystrix 实现自动降级与依赖隔离</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/02/2018-01-02-use-hystrix-impl-autofallback&isolation/" class="archive-article-date">
-  	<time datetime="2018-01-02T03:19:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Hystrix说明"><a href="#Hystrix说明" class="headerlink" title="Hystrix说明"></a>Hystrix说明</h2><p>官方文档 [<a href="https://github.com/Netflix/Hystrix/wiki" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki</a>]</p>
-<blockquote>
-<p>hystrix是netflix开源的一个容灾框架，解决当外部依赖故障时拖垮业务系统、甚至引起雪崩的问题。</p>
-</blockquote>
-<h3 id="2-1为什么需要Hystrix"><a href="#2-1为什么需要Hystrix" class="headerlink" title="2.1为什么需要Hystrix?"></a>2.1为什么需要Hystrix?</h3><p>在大中型分布式系统中，通常系统很多依赖(HTTP,hession,Netty,Dubbo等)，在高并发访问下,这些依赖的稳定性与否对系统的影响非常大,但是依赖有很多不可控问题:如网络连接缓慢，资源繁忙，暂时不可用，服务脱机等。</p>
-<p>当依赖阻塞时,大多数服务器的线程池就出现阻塞(BLOCK),影响整个线上服务的稳定性，在复杂的分布式架构的应用程序有很多的依赖，都会不可避免地在某些时候失败。高并发的依赖失败时如果没有隔离措施，当前应用服务就有被拖垮的风险。</p>
-<blockquote>
-<p><code>例如:一个依赖``30``个SOA服务的系统,每个服务``99.99``%可用。</code></p>
-<pre><code>`99.99``%的``30``次方 ≈&amp;nbsp;``99.7``%`
-
-`0.3``% 意味着一亿次请求 会有&amp;nbsp;``3``,``000``,``00``次失败`
-
-`换算成时间大约每月有``2``个小时服务不稳定.`
-
-`随着服务依赖数量的变多，服务不稳定的概率会成指数性提高.`
-</code></pre></blockquote>
-<p>解决问题方案:对依赖做隔离。<br>
-        
-          <a class="article-more-a" href="/2018/01/02/2018-01-02-use-hystrix-impl-autofallback&isolation/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">spring cloud</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">hystrix</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/微服务//" class="article-tag-list-link color4">微服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/02/2018-01-02-use-hystrix-impl-autofallback&isolation/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2017-12-29-designing-microservices-architecture-for-failure" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/">针对故障设计微服务架构</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/" class="archive-article-date">
-  	<time datetime="2017-12-29T10:19:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>服务边界定义良好的微服务使得隔离故障成为可能。但是正如其它的分布式系统，网络，硬件或者应用层出问题的概率更高。服务依赖的后果是任何组件可能暂时对用户不可用。为了让局部故障的影响最小化，我们需要构建能优雅响应部分依赖中断运行的容错的服务。<br>这篇文章介绍了<a href="https://risingstack.com/" target="_blank" rel="noopener">RisingStack’s Node.js Consulting &amp; Development experience</a>里面关于构建高可用微服务最通用的技术和架构模式。</p>
-</blockquote>
-<p><strong>如果你不熟悉这篇文章里的模式，不一定意味着你做错了什么。构建高可用系统需要额外的开销。</strong></p>
-<h2 id="微服务的风险"><a href="#微服务的风险" class="headerlink" title="微服务的风险"></a>微服务的风险</h2><blockquote>
-<p>微服务架构把应用逻辑移到服务并通过网络层进行通信。网络层通信需要多个物理和逻辑层组件的协作，相比内存调动通信给系统带来了额外了延迟和复杂度。这种在分布式系统增加的复杂度使得某些网络异常的概率更高。</p>
-</blockquote>
-<p><a href="https://twitter.com/share?text=%23microservices%20allow%20you%20to%20achieve%20graceful%20service%20degradation%20as%20components%20can%20be%20set%20up%20to%20fail%20separately.;url=https://blog.risingstack.com/designing-microservices-architecture-for-failure" target="_blank" rel="noopener">#microservices allow you to achieve graceful service degradation as components can be set up to fail separately.</a><a href="https://twitter.com/share?text=%23microservices%20allow%20you%20to%20achieve%20graceful%20service%20degradation%20as%20components%20can%20be%20set%20up%20to%20fail%20separately.;url=https://blog.risingstack.com/designing-microservices-architecture-for-failure" target="_blank" rel="noopener">Click To Tweet</a></p>
-<blockquote>
-<p>微服务架构相比同构最大的好处是各个小组可以独立设计开发和部署服务，对服务的生命周期有完全控制权。同时意味着我们无法控制服务的依赖因为很有可能由别的小组管理。在微服务架构下，我们需要时刻提醒自己，别人提供的服务或者组件会因为错误的发布，配置或者迁移等其它改变导致短暂不可用。<br>
-        
-          <a class="article-more-a" href="/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">spring cloud</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">架构</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/微服务//" class="article-tag-list-link color4">微服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/29/2017-12-29-designing-microservices-architecture-for-failure/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2017-12-29-hystrix-execute-theory" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/29/2017-12-29-hystrix-execute-theory/">hystrix实现原理</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/29/2017-12-29-hystrix-execute-theory/" class="archive-article-date">
-  	<time datetime="2017-12-29T07:22:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p>下图展示了当你使用 Hystrix 来包装你请求依赖服务时的流程：</p>
-<p><img src="http://res.51so.info/FlMGM-24VVe7tqbzGzhL9_L5Xao6" alt="流程图"> </p>
-<p>接下来将详细介绍如下问题：</p>
-<ul>
-<li>1.构建<code>HystrixCommand</code>或者<code>HystrixObservableCommand</code>对象</li>
-<li>2.执行命令（即上述 Command 对象包装的逻辑）</li>
-<li>3.结果是否有缓存</li>
-<li>4.请求线路（类似电路）是否是开路</li>
-<li>5.线程池/请求队列/信号量占满时会发生什么</li>
-<li>6.使用<code>HystrixObservableCommand.construct()</code>还是<code>HystrixCommand.run()</code></li>
-<li>7.计算链路健康度</li>
-<li>8.失败回退逻辑</li>
-<li>9.返回正常回应
-        
-          <a class="article-more-a" href="/2017/12/29/2017-12-29-hystrix-execute-theory/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">spring cloud</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">hystrix</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/微服务//" class="article-tag-list-link color4">微服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/29/2017-12-29-hystrix-execute-theory/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2017-12-21-eureka-ha-3node" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/21/2017-12-21-eureka-ha-3node/">Eureka高可用3节点配置</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/21/2017-12-21-eureka-ha-3node/" class="archive-article-date">
-  	<time datetime="2017-12-21T08:06:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>Eureka Server除了单点运行之外，还可以通过运行多个实例，并进行互相注册的方式来实现高可用的部署，所以我们只需要将Eureke Server配置其他可用的serviceUrl就能实现高可用部署。</p>
-</blockquote>
-<h1 id="3节点实现Eureka高可用"><a href="#3节点实现Eureka高可用" class="headerlink" title="3节点实现Eureka高可用"></a>3节点实现Eureka高可用</h1><p><img src="/images/springcloud/eureka-ha-3node.png" alt=""></p>
-<blockquote>
-<p>Eureka Server可以运行多个实例来构建集群，解决单点问题，但不同于ZooKeeper的选举leader的过程，Eureka Server采用的是Peer to Peer对等通信。这是一种去中心化的架构，无master/slave区分，每一个Peer都是对等的。在这种架构中，节点通过彼此互相注册来提高可用性，每个节点需要添加一个或多个有效的serviceUrl指向其他节点。每个节点都可被视为其他节点的副本。</p>
-</blockquote>
-        
-          <a class="article-more-a" href="/2017/12/21/2017-12-21-eureka-ha-3node/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">spring cloud</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">eureka</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">高可用</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/微服务//" class="article-tag-list-link color4">微服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/21/2017-12-21-eureka-ha-3node/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2017-12-01-linux-common-cmd" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/2017-12-01-linux-common-cmd/">linux常用命令整理</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/01/2017-12-01-linux-common-cmd/" class="archive-article-date">
-  	<time datetime="2017-12-01T07:06:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="linux-目录"><a href="#linux-目录" class="headerlink" title="linux 目录"></a>linux 目录</h2><p><img src="http://www.runoob.com/wp-content/uploads/2014/06/003vPl7Rty6E8kZRlAEdc690.jpg" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/bin：bin是Binary的缩写, 这个目录存放着最经常使用的命令。</span><br><span class="line">/boot：这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。</span><br><span class="line">/dev ：dev是Device(设备)的缩写, 该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相同的。</span><br><span class="line">/etc：这个目录用来存放所有的系统管理所需要的配置文件和子目录。</span><br><span class="line">/home：用户的主目录，在Linux中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的。</span><br><span class="line">/lib：这个目录里存放着系统最基本的动态连接共享库，其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库。</span><br><span class="line">/lost+found：这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件。</span><br><span class="line">/media：linux系统会自动识别一些设备，例如U盘、光驱等等，当识别后，linux会把识别的设备挂载到这个目录下。</span><br><span class="line">/mnt：系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将光驱挂载在/mnt/上，然后进入该目录就可以查看光驱里的内容了。</span><br><span class="line">/opt： 这是给主机额外安装软件所摆放的目录。比如你安装一个ORACLE数据库则就可以放到这个目录下。默认是空的。</span><br><span class="line">/proc：这个目录是一个虚拟的目录，它是系统内存的映射，我们可以通过直接访问这个目录来获取系统信息。</span><br><span class="line">这个目录的内容不在硬盘上而是在内存里，我们也可以直接修改里面的某些文件，比如可以通过下面的命令来屏蔽主机的ping命令，使别人无法ping你的机器：</span><br><span class="line">/root：该目录为系统管理员，也称作超级权限者的用户主目录。</span><br><span class="line">/sbin：s就是Super User的意思，这里存放的是系统管理员使用的系统管理程序。</span><br><span class="line">/selinux： 这个目录是Redhat/CentOS所特有的目录，Selinux是一个安全机制，类似于windows的防火墙，但是这套机制比较复杂，这个目录就是存放selinux相关的文件的。</span><br><span class="line">/srv： 该目录存放一些服务启动之后需要提取的数据。</span><br><span class="line">/sys： 这是linux2.6内核的一个很大的变化。该目录下安装了2.6内核中新出现的一个文件系统 sysfs 。</span><br><span class="line">sysfs文件系统集成了下面3种文件系统的信息：针对进程信息的proc文件系统、针对设备的devfs文件系统以及针对伪终端的devpts文件系统。</span><br><span class="line">该文件系统是内核设备树的一个直观反映。</span><br><span class="line">当一个内核对象被创建的时候，对应的文件和目录也在内核对象子系统中被创建。</span><br><span class="line">/tmp：这个目录是用来存放一些临时文件的。</span><br><span class="line">/usr： 这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似于windows下的program files目录。</span><br><span class="line">/usr/bin：系统用户使用的应用程序。</span><br><span class="line">/usr/sbin：超级用户使用的比较高级的管理程序和系统守护程序。</span><br><span class="line">/usr/src：内核源代码默认的放置目录。</span><br><span class="line">/var：这个目录中存放着在不断扩充着的东西，我们习惯将那些经常被修改的目录放在这个目录下。包括各种日志文件。</span><br></pre></td></tr></table></figure></p>
-        
-          <a class="article-more-a" href="/2017/12/01/2017-12-01-linux-common-cmd/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/运维//" class="article-tag-list-link color3">运维</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/01/2017-12-01-linux-common-cmd/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2017-11-30-docker-some-cmd" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/30/2017-11-30-docker-some-cmd/">docker一些常用命令整理</a>
-    </h1>
-  
-
-        
-        <a href="/2017/11/30/2017-11-30-docker-some-cmd/" class="archive-article-date">
-  	<time datetime="2017-11-30T07:26:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="查看docker信息（version、info）"><a href="#查看docker信息（version、info）" class="headerlink" title="查看docker信息（version、info）"></a>查看docker信息（version、info）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看docker版本 </span></span><br><span class="line">docker version </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 显示docker系统的信息 </span></span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
-<h2 id="对image的操作（search、pull、images、rmi、history）"><a href="#对image的操作（search、pull、images、rmi、history）" class="headerlink" title="对image的操作（search、pull、images、rmi、history）"></a>对image的操作（search、pull、images、rmi、history）</h2>
-        
-          <a class="article-more-a" href="/2017/11/30/2017-11-30-docker-some-cmd/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/运维//" class="article-tag-list-link color3">运维</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/11/30/2017-11-30-docker-some-cmd/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2017-11-14-centos-set-aliyun-repo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/14/2017-11-14-centos-set-aliyun-repo/">设置centos7的YUM源为国内阿里云源</a>
-    </h1>
-  
-
-        
-        <a href="/2017/11/14/2017-11-14-centos-set-aliyun-repo/" class="archive-article-date">
-  	<time datetime="2017-11-14T05:40:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="阿里云Linux安装镜像源地址："><a href="#阿里云Linux安装镜像源地址：" class="headerlink" title="阿里云Linux安装镜像源地址："></a>阿里云Linux安装镜像源地址：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://mirrors.aliyun.com/ </span><br><span class="line">http://mirrors.aliyun.com/repo/</span><br></pre></td></tr></table></figure>
-<h3 id="CentOS系统更换软件安装源"><a href="#CentOS系统更换软件安装源" class="headerlink" title="CentOS系统更换软件安装源"></a>CentOS系统更换软件安装源</h3><blockquote>
-<p>第一步：备份你的原镜像文件，以免出错后可以恢复。</p>
-</blockquote>
-        
-          <a class="article-more-a" href="/2017/11/14/2017-11-14-centos-set-aliyun-repo/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/运维//" class="article-tag-list-link color3">运维</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/11/14/2017-11-14-centos-set-aliyun-repo/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2017-09-13-use-visualvm-monitor-remote-jvm" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/13/2017-09-13-use-visualvm-monitor-remote-jvm/">使用java VisualVM 监控远程服务器jvm</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/13/2017-09-13-use-visualvm-monitor-remote-jvm/" class="archive-article-date">
-  	<time datetime="2017-09-13T01:27:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><blockquote>
-<p>在部署微服务节点的时候发现在Docker容器中占用内存比较多平均一个节点要去到1.5G~2G ，因此项目组需要分析为什么会造成这种现象。此时我马上联想到用<code>JVisualVM</code>来监控应用，那么问题来了如何监控远程容器中的应用呢？</p>
-</blockquote>
-<p><img src="https://kingschan1204.github.io/microservices/spring-boot/res/eureka_docker_memory_usage.jpg" alt="Eureka docker内存占用情况"></p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><blockquote>
-<p>使用JvisualVM 通过JMX远程监控服务器上的JVM<br>
-        
-          <a class="article-more-a" href="/2017/09/13/2017-09-13-use-visualvm-monitor-remote-jvm/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">jvm</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">jmx</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术笔记//" class="article-tag-list-link color5">技术笔记</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/13/2017-09-13-use-visualvm-monitor-remote-jvm/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+  <div id="SOHUCS" sid="2018-01-17-spring-actuator" ></div> 
+<script charset="utf-8" type="text/javascript" src="//changyan.sohu.com/upload/changyan.js" ></script>
+<script type="text/javascript">
+    window.changyan.api.config({
+        appid: "cyt8PGHor",
+        conf: "prod_a5fec0bea9f0e62a14754c9f4caf6281"
+    });
+</script>
+</script>
+  
+
+  
+
   
 
 
@@ -1301,8 +541,8 @@ var _hmt = _hmt || [];
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
